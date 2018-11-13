@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">BloG</string>
+    <string name="title_post">post</string>
+    <string name="title_info_blog">info</string>
+    <string name="title_subscriptions">following</string>
+    <string name="title_subscribers">followers</string>
+    <string name="title_search_by_tags">search</string>
+</resources>
