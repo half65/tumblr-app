@@ -30,37 +30,25 @@ public class MainActivity extends AppCompatActivity {
                 switch (item.getItemId()) {
                     case R.id.navigation_post:
                         postView.setVisibility(View.VISIBLE);
-                        infoLayout.setVisibility(View.GONE);
-                        followingsView.setVisibility(View.GONE);
-                        followersView.setVisibility(View.GONE);
-                        searchLayout.setVisibility(View.GONE);
+
                         return true;
                     case R.id.navigation_info_blog:
-                        postView.setVisibility(View.GONE);
+
                         infoLayout.setVisibility(View.VISIBLE);
-                        followingsView.setVisibility(View.GONE);
-                        followersView.setVisibility(View.GONE);
-                        searchLayout.setVisibility(View.GONE);
+
                         return true;
                     case R.id.navigation_subscriptions:
-                        postView.setVisibility(View.GONE);
-                        infoLayout.setVisibility(View.GONE);
+
                         followingsView.setVisibility(View.VISIBLE);
-                        followersView.setVisibility(View.GONE);
-                        searchLayout.setVisibility(View.GONE);
+
                         return true;
                     case R.id.navigation_subscribers:
-                        postView.setVisibility(View.GONE);
-                        infoLayout.setVisibility(View.GONE);
-                        followingsView.setVisibility(View.GONE);
+
                         followersView.setVisibility(View.VISIBLE);
-                        searchLayout.setVisibility(View.GONE);
+
                         return true;
                     case R.id.navigation_search_by_tags:
-                        postView.setVisibility(View.GONE);
-                        infoLayout.setVisibility(View.GONE);
-                        followingsView.setVisibility(View.GONE);
-                        followersView.setVisibility(View.GONE);
+
                         searchLayout.setVisibility(View.VISIBLE);
                         return true;
                 }
@@ -80,8 +68,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchVisibility(Layout layout){
-//test commit
-//test commit2
+
     }
 
 }
