@@ -77,7 +77,7 @@
     <LinearLayout
         android:id="@+id/find_to_tag_view"
         android:layout_width="match_parent"
-        android:layout_height="489dp"
+        android:layout_height="427dp"
         android:orientation="vertical"
         android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"

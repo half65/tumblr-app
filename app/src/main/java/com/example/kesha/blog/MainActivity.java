@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void switchVisibility(Layout layout){
-
+//test commit
     }
 
 }
