@@ -20,42 +20,50 @@ public class MainActivity extends AppCompatActivity {
     private FrameLayout followingsView;
     private FrameLayout followersView;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener;
-
-    {
-        mOnNavigationItemSelectedListener = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                switch (item.getItemId()) {
-                    case R.id.navigation_post:
-                        postView.setVisibility(View.VISIBLE);
-
-                        return true;
-                    case R.id.navigation_info_blog:
-
-                        infoLayout.setVisibility(View.VISIBLE);
-
-                        return true;
-                    case R.id.navigation_subscriptions:
-
-                        followingsView.setVisibility(View.VISIBLE);
-
-                        return true;
-                    case R.id.navigation_subscribers:
-
-                        followersView.setVisibility(View.VISIBLE);
-
-                        return true;
-                    case R.id.navigation_search_by_tags:
-
-                        searchLayout.setVisibility(View.VISIBLE);
-                        return true;
-                }
-                return false;
+    private final BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener =
+            new BottomNavigationView.OnNavigationItemSelectedListener() {
+        @Override
+        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.navigation_post:
+                    postView.setVisibility(View.VISIBLE);
+                    infoLayout.setVisibility(View.GONE);
+                    followingsView.setVisibility(View.GONE);
+                    followersView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_info_blog:
+                    postView.setVisibility(View.GONE);
+                    infoLayout.setVisibility(View.VISIBLE);
+                    followingsView.setVisibility(View.GONE);
+                    followersView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_subscriptions:
+                    postView.setVisibility(View.GONE);
+                    infoLayout.setVisibility(View.GONE);
+                    followingsView.setVisibility(View.VISIBLE);
+                    followersView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_subscribers:
+                    postView.setVisibility(View.GONE);
+                    infoLayout.setVisibility(View.GONE);
+                    followingsView.setVisibility(View.GONE);
+                    followersView.setVisibility(View.VISIBLE);
+                    searchLayout.setVisibility(View.GONE);
+                    return true;
+                case R.id.navigation_search_by_tags:
+                    postView.setVisibility(View.GONE);
+                    infoLayout.setVisibility(View.GONE);
+                    followingsView.setVisibility(View.GONE);
+                    followersView.setVisibility(View.GONE);
+                    searchLayout.setVisibility(View.VISIBLE);
+                    return true;
             }
-        };
-    }
+            return false;
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,12 +71,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
+        BottomNavigationView navigation = findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
 
-    private void switchVisibility(Layout layout){
-
+    private void switchVisibility(Layout layout) {
+//test commit
+//test commit2
     }
 
 }
