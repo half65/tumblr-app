@@ -27,7 +27,15 @@
             android:id="@+id/sliding_tabs"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:tabMode="fixed" />
+            android:background="@color/colorPrimary"
+            android:backgroundTint="@color/colorPrimary"
+            android:fadeScrollbars="true"
+            app:tabContentStart="12dp"
+            app:tabIndicatorAnimationDuration="@android:integer/config_longAnimTime"
+            app:tabIndicatorColor="@color/colorTabIndicator"
+            app:tabIndicatorHeight="2dp"
+            app:tabMode="scrollable"
+            tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
 
