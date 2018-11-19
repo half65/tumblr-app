@@ -31,10 +31,10 @@
             android:backgroundTint="@color/colorPrimary"
             android:fadeScrollbars="true"
             app:tabContentStart="12dp"
+            app:tabGravity="fill"
             app:tabIndicatorAnimationDuration="@android:integer/config_longAnimTime"
             app:tabIndicatorColor="@color/colorTabIndicator"
             app:tabIndicatorHeight="2dp"
-            app:tabMode="scrollable"
             tools:ignore="UnusedAttribute" />
 
     </LinearLayout>
