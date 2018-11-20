@@ -1,4 +1,4 @@
-package com.example.kesha.blog.Fragments;
+package com.example.kesha.blog.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

@@ -9,11 +9,11 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
-import com.example.kesha.blog.Fragments.FragmentFollowers;
-import com.example.kesha.blog.Fragments.FragmentFollowing;
-import com.example.kesha.blog.Fragments.FragmentSearch;
-import com.example.kesha.blog.Fragments.InfoFragment;
-import com.example.kesha.blog.Fragments.postListFragment;
+import com.example.kesha.blog.fragments.FragmentFollowers;
+import com.example.kesha.blog.fragments.FragmentFollowing;
+import com.example.kesha.blog.fragments.FragmentSearch;
+import com.example.kesha.blog.fragments.InfoFragment;
+import com.example.kesha.blog.fragments.postListFragment;
 import com.github.scribejava.apis.TumblrApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
@@ -26,10 +26,11 @@ import com.github.seratch.signedrequest4j.SignedRequest;
 import com.github.seratch.signedrequest4j.SignedRequestFactory;
 
 import java.io.IOException;
-import java.util.Objects;
 import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
+    public static final String S_PREF_NAME = "accessVariable";
+    public static final String KEY_VERIFIER = "verifier";
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private static final int REQUEST_CODE_AUTH = 33;
@@ -115,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void processVerifier(final String oauthVerifier) {
         Log.d(TAG, "processVerifier: " + oauthVerifier);
-        Utils.showDialogSave(MainActivity.this);
+        Utils.showDialogSave(MainActivity.this, oauthVerifier);
 
         new Thread(new Runnable() {
             @Override
@@ -168,9 +169,11 @@ public class MainActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
-                intent.putExtra(WebViewActivity.ARG_AUTH_URL, authUrl);
-                startActivityForResult(intent, REQUEST_CODE_AUTH);
+//                if(getSharedPreferences(S_PREF_NAME, MODE_PRIVATE).getString(KEY_VERIFIER, "").equals("")) {
+                    Intent intent = new Intent(MainActivity.this, WebViewActivity.class);
+                    intent.putExtra(WebViewActivity.ARG_AUTH_URL, authUrl);
+                    startActivityForResult(intent, REQUEST_CODE_AUTH);
+//                } else  processVerifier(getSharedPreferences(S_PREF_NAME, MODE_PRIVATE).getString(KEY_VERIFIER, ""));
             }
         });
     }
