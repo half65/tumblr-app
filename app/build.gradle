@@ -30,4 +30,5 @@ dependencies {
     implementation 'com.github.scribejava:scribejava-core:6.1.0'
     implementation 'com.github.seratch:signedrequest4j:2.14'
     implementation 'com.android.support:recyclerview-v7:28.0.+'
+    implementation 'com.tumblr:jumblr:0.0.13'
 }

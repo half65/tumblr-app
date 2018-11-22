@@ -6,5 +6,8 @@
     <string name="title_subscribers">followers</string>
     <string name="title_search_by_tags">search</string>
     <string name="textErrorOpenWebView">The application could not open the window for authorization. Try restarting the application.</string>
+    <string name="text_registration_btn">Зарегистрироваться (войти)</string>
+    <string name="text_info_posts_count">Постов: %d</string>
+    <string name="text_info_follower_count">Подписчиков: %d</string>
 
 </resources>

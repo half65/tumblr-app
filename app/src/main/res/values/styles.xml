@@ -12,4 +12,10 @@
         <item name="android:windowBackground">@drawable/splash_screen</item>
     </style>
 
+    <style name="styleRegistrationBtn" parent="@style/Widget.AppCompat.Button.Colored">
+        <item name="background">@drawable/start_registration_btn</item>
+        <item name="colorButtonNormal">#1a237e</item>
+        <item name="colorControlHighlight">#673ab7</item>
+    </style>
+
 </resources>
