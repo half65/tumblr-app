@@ -96,56 +96,55 @@ public class InfoFragment extends Fragment {
 
     private void getInfo(Context context) {
 
-
-        sPref = context.getSharedPreferences(Constants.S_PREF_NAME, MODE_PRIVATE);
-
-
         new Thread(new Runnable() {
             @Override
             public void run() {
                 Log.e(TAG, "=========== > START GET INFO!!!");
-
-
-                Log.e(TAG, "============================ accessTokenKey > " + accessTokenKey);
-                Log.e(TAG, "============================ accessSecretTokenKey > " + accessSecretTokenKey);
-
+                if (getActivity() != null) {
                     JumblrClient client = TumblrApplication.getClient();
-                    final User user = client.user();
-                    followerCount = user.getBlogs().get(0).followers().size();
-                    Log.e(TAG, "============================ user.getName()> " + user.getName());
-
-                    Log.e(TAG, "============================ followers> " + followerCount);
-                    Log.e(TAG, "============================ avatar> " + user.getBlogs().get(0).avatar(512));
-
-                    String avatarUrl = user.getBlogs().get(0).avatar(512);
-                    HttpURLConnection connection = null;
-                    try {
-                        connection = (HttpURLConnection) new URL(avatarUrl).openConnection();
-                        InputStream stream = connection.getInputStream();
-                        avatarBitmap = BitmapFactory.decodeStream(stream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
                     if (getActivity() != null) {
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
+                        final User user = client.user();
+                        if (getActivity() != null) {
+                            followerCount = user.getBlogs().get(0).followers().size();
+                            if (getActivity() != null) {
+                                String avatarUrl = user.getBlogs().get(0).avatar(512);
+                                HttpURLConnection connection = null;
+                                try {
+                                    connection = (HttpURLConnection) new URL(avatarUrl).openConnection();
+                                    InputStream stream = connection.getInputStream();
+                                    avatarBitmap = BitmapFactory.decodeStream(stream);
+                                } catch (IOException e) {
+                                    e.printStackTrace();
+                                }
 
-                                avatarImageView.setImageBitmap(avatarBitmap);
-                                setNameTextView(user.getName());
-                                setPostsTextView(String.format(getString(R.string.text_info_posts_count)
-                                        , user.getBlogs().get(0).getPostCount()));
-                                setFollowersTextView(String.format(getString(R.string.text_info_follower_count)
-                                        , followerCount));
 
-                                setFollowingTextView(String.format(getString(R.string.text_info_following_count)
-                                        , user.getFollowingCount()));
+                                if (getActivity() != null) {
+                                    getActivity().runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (getActivity() != null) {
+                                                avatarImageView.setImageBitmap(avatarBitmap);
+                                                setNameTextView(user.getName());
+                                                if (getActivity() != null) {
+                                                    setPostsTextView(String.format(getString(R.string.text_info_posts_count)
+                                                            , user.getBlogs().get(0).getPostCount()));
+                                                    if (getActivity() != null) {
+                                                        setFollowersTextView(String.format(getString(R.string.text_info_follower_count)
+                                                                , followerCount));
+                                                        if (getActivity() != null) {
+                                                            setFollowingTextView(String.format(getString(R.string.text_info_following_count)
+                                                                    , user.getFollowingCount()));
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    });
+                                }
                             }
-                        });
+                        }
                     }
-
+                }
             }
         }).start();
     }

@@ -23,6 +23,7 @@ public class FollowersFragment extends Fragment {
     private final String TAG = FollowersFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private Activity activity;
+    private List<User> users;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,18 +54,21 @@ public class FollowersFragment extends Fragment {
 
                 if (getActivity() != null && isAdded()) {
                     User user = client.user();
-                    final List<User> users = client.blogFollowers(String.format(getActivity().getString(R.string.title_blog), user.getBlogs().get(0).getName()));
-                    Log.e(TAG, "-----------users.get(0).getBlogs().get(0).avatar(512)  " +
-                            client.blogAvatar(String.format(getString(R.string.title_blog), users.get(0).getName())));
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FollowersAdapter followersAdapter = new FollowersAdapter(activity, users, client);
-                            recyclerView.setAdapter(followersAdapter);
-                        }
-                    });
-
-                    Log.e(TAG, "----------------------" + user.getBlogs().get(0).followers().get(0).getName());
+                    if (getActivity() != null) {
+                        users = client.blogFollowers(String.format(getActivity()
+                                .getString(R.string.title_blog), user.getBlogs().get(0).getName()));
+                    }
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (users != null) {
+                                    FollowersAdapter followersAdapter = new FollowersAdapter(activity, users, client);
+                                    recyclerView.setAdapter(followersAdapter);
+                                }
+                            }
+                        });
+                    }
                 }
             }
         }).start();

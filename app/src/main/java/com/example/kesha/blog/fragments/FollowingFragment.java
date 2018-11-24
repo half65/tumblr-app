@@ -27,6 +27,7 @@ import static android.content.Context.MODE_PRIVATE;
 public class FollowingFragment extends Fragment {
     private final String TAG = FollowingFragment.class.getName();
     private RecyclerView recyclerView;
+    private List<Blog> blogs;
 
 
     @Override
@@ -50,16 +51,21 @@ public class FollowingFragment extends Fragment {
                 Log.e(TAG, "=========== > START GET FOLLOWING!!!");
                 if (getActivity() != null && isAdded()) {
                     User user = client.user();
-                    final List<Blog> blogs = client.userFollowing();
-                    Log.e(TAG, "-----------blogs.get(0).avatar(512)  " + blogs.get(0).avatar(512));
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
-                            recyclerView.setAdapter(followingAdapter);
+                    if (getActivity() != null) {
+                        blogs = client.userFollowing();
+
+                        if (getActivity() != null) {
+                            getActivity().runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getActivity() != null) {
+                                        FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
+                                        recyclerView.setAdapter(followingAdapter);
+                                    }
+                                }
+                            });
                         }
-                    });
-                    Log.e(TAG, "----------------------" + blogs.size());
+                    }
                 }
             }
         }).start();
