@@ -5,12 +5,11 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 
-import com.example.kesha.blog.fragments.FragmentFollowers;
-import com.example.kesha.blog.fragments.FragmentFollowing;
+import com.example.kesha.blog.fragments.FollowingFragment;
+import com.example.kesha.blog.fragments.FollowersFragment;
 import com.example.kesha.blog.fragments.FragmentSearch;
 import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.postListFragment;
-import com.github.scribejava.core.model.OAuth1RequestToken;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -42,12 +41,15 @@ public class MainActivity extends AppCompatActivity {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
         adapter.addFragment(new postListFragment(), "posts");
         adapter.addFragment(new InfoFragment(), "info");
-        adapter.addFragment(new FragmentFollowing(), "following");
-        adapter.addFragment(new FragmentFollowers(), "followers");
+        adapter.addFragment(new FollowingFragment(), "following");
+        adapter.addFragment(new FollowersFragment(), "followers");
         adapter.addFragment(new FragmentSearch(), "search");
         viewPager.setAdapter(adapter);
     }
 
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+    }
 }

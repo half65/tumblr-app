@@ -31,9 +31,9 @@ public class Constants {
     public static final String consumerKey = "yuWfjh1UkS8UgAZWmjOPHQMmoJOXUXilND42nZTYYstohhxKsE";
     public static final String consumerSecret = "X3B5Pm1xuqqerpLdqXFeozYJZNVnkvNAzK43UmkXHHMerHBlt8";
     public static final String S_PREF_NAME = "S_PREF_NAME";
-    public static final String KEY_VERIFIER = "KEY_VERIFIER";
     public static final String KEY_ACCESS_TOKEN = "KEY_ACCESS_TOKEN";
     public static final String KEY_ACCESS_SECRET_TOKEN = "KEY_ACCESS_SECRET_TOKEN";
+    public static final String SAVE_AUTHORIZATION_FLAG_KEY = "SAVE_AUTHORIZATION_FLAG_KEY";
 
 
 

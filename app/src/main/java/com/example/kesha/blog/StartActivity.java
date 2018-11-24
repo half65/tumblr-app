@@ -2,7 +2,6 @@ package com.example.kesha.blog;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -25,11 +24,6 @@ public class StartActivity extends AppCompatActivity {
 
     private OAuth10aService oAuthService;
     public OAuth1RequestToken requestToken;
-
-    private String accessTokenKey;
-    private String accessSecretTokenKey;
-
-    private SharedPreferences sPref;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -89,38 +83,38 @@ public class StartActivity extends AppCompatActivity {
 
     private void processVerifier(final String oauthVerifier) {
         Log.e(TAG, "processVerifier: " + oauthVerifier);
-        Utils.registrationFlag = true;
-
         new Thread(new Runnable() {
             @Override
             public void run() {
-                OAuth1AccessToken accessToken = null;
+                OAuth1AccessToken oauthAccessToken = null;
                 try {
                     if (requestToken != null) {
-                        accessToken = oAuthService.getAccessToken(requestToken, oauthVerifier);
-                        Log.e(TAG, "++++++++++++111  " + accessToken);
+                        oauthAccessToken = oAuthService.getAccessToken(requestToken, oauthVerifier);
+                        Log.e(TAG, "oauth token: " + oauthAccessToken);
                     }
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                } catch (ExecutionException e) {
-                    e.printStackTrace();
-                }
-                if (accessToken != null && accessToken.getToken() != null && accessToken.getTokenSecret() != null) {
-                    accessTokenKey = accessToken.getToken();
-                    accessSecretTokenKey = accessToken.getTokenSecret();
                 }
 
-                runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        Utils.showDialogSave(StartActivity.this, accessTokenKey, accessSecretTokenKey);
+                if (oauthAccessToken != null) {
+                    final String token = oauthAccessToken.getToken();
+                    final String secret = oauthAccessToken.getTokenSecret();
+
+                    if (token != null && secret != null) {
+                        TumblrApplication.initJumblrClient(token, secret);
+                        PreferencesStorage.saveAccessToken(token);
+                        PreferencesStorage.saveTokenSecret(secret);
+                        runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                Intent intent = new Intent(StartActivity.this, MainActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                            }
+                        });
                     }
-                });
+                }
             }
         }).start();
-
-
     }
 }

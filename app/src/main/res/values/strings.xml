@@ -9,5 +9,10 @@
     <string name="text_registration_btn">Зарегистрироваться (войти)</string>
     <string name="text_info_posts_count">Постов: %d</string>
     <string name="text_info_follower_count">Подписчиков: %d</string>
+    <string name="text_info_following_count">Mои подписки: %d</string>
+    <string name="me_avatar">Me avatar</string>
+    <string name="alert_dialog_title">Сохранить данные входа?</string>
+    <string name="title_blog">%s.tumblr.com</string>
+    <string name="avatar_follower_descr">avatar follower</string>
 
 </resources>

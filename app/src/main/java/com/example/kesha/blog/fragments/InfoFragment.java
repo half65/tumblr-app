@@ -19,18 +19,7 @@ import android.widget.TextView;
 
 import com.example.kesha.blog.Constants;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.StartActivity;
-import com.example.kesha.blog.Utils;
-import com.github.scribejava.apis.TumblrApi;
-import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.model.OAuth1AccessToken;
-import com.github.scribejava.core.model.OAuth1RequestToken;
-import com.github.scribejava.core.oauth.OAuth10aService;
-import com.github.seratch.signedrequest4j.HttpResponse;
-import com.github.seratch.signedrequest4j.OAuthAccessToken;
-import com.github.seratch.signedrequest4j.OAuthConsumer;
-import com.github.seratch.signedrequest4j.SignedRequest;
-import com.github.seratch.signedrequest4j.SignedRequestFactory;
+import com.example.kesha.blog.TumblrApplication;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
 
@@ -38,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.concurrent.ExecutionException;
 
 import static android.content.Context.MODE_PRIVATE;
 
@@ -76,7 +64,9 @@ public class InfoFragment extends Fragment {
         informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         informationRecycler.setLayoutManager(manager);
-        getInfo(getContext());
+        if (getContext() != null) {
+            getInfo(getContext());
+        }
         return fragmentView;
     }
 
@@ -108,22 +98,19 @@ public class InfoFragment extends Fragment {
 
 
         sPref = context.getSharedPreferences(Constants.S_PREF_NAME, MODE_PRIVATE);
-        Log.e(TAG, "====================================================== > START!!!");
 
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                        accessTokenKey = sPref.getString(Constants.KEY_ACCESS_TOKEN, null);
-                        accessSecretTokenKey = sPref.getString(Constants.KEY_ACCESS_SECRET_TOKEN, null);
 
-                    Log.e(TAG, "============================ accessTokenKey > " + accessTokenKey);
-                    Log.e(TAG, "============================ accessSecretTokenKey > " + accessSecretTokenKey);
-                if(accessTokenKey !=null&&accessSecretTokenKey !=null)
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Log.e(TAG, "=========== > START GET INFO!!!");
 
-                {
-                    JumblrClient client = new JumblrClient(Constants.consumerKey, Constants.consumerSecret);
-                    client.setToken(accessTokenKey, accessSecretTokenKey);
-                    user = client.user();
+
+                Log.e(TAG, "============================ accessTokenKey > " + accessTokenKey);
+                Log.e(TAG, "============================ accessSecretTokenKey > " + accessSecretTokenKey);
+
+                    JumblrClient client = TumblrApplication.getClient();
+                    final User user = client.user();
                     followerCount = user.getBlogs().get(0).followers().size();
                     Log.e(TAG, "============================ user.getName()> " + user.getName());
 
@@ -135,17 +122,17 @@ public class InfoFragment extends Fragment {
                     try {
                         connection = (HttpURLConnection) new URL(avatarUrl).openConnection();
                         InputStream stream = connection.getInputStream();
-                        avatarBitmap= BitmapFactory.decodeStream(stream);
+                        avatarBitmap = BitmapFactory.decodeStream(stream);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
 
 
                     if (getActivity() != null) {
                         getActivity().runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
+
                                 avatarImageView.setImageBitmap(avatarBitmap);
                                 setNameTextView(user.getName());
                                 setPostsTextView(String.format(getString(R.string.text_info_posts_count)
@@ -153,11 +140,12 @@ public class InfoFragment extends Fragment {
                                 setFollowersTextView(String.format(getString(R.string.text_info_follower_count)
                                         , followerCount));
 
-                                setFollowingTextView("Mои подписки: " + user.getFollowingCount());
+                                setFollowingTextView(String.format(getString(R.string.text_info_following_count)
+                                        , user.getFollowingCount()));
                             }
                         });
                     }
-                }
+
             }
         }).start();
     }
