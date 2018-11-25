@@ -11,8 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.GlideApp;
 import com.example.kesha.blog.R;
 import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.User;
 
 import java.io.IOException;
@@ -20,19 +23,22 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.FollowersViewHolder> {
     private List<User> followers;
     LayoutInflater layoutInflater;
     private Activity activity;
-    private Bitmap avatarBitmap;
     private JumblrClient client;
+    private int corner;
 
     FollowersAdapter(Activity act, List<User> users, JumblrClient client) {
         followers = users;
         this.client = client;
         layoutInflater = LayoutInflater.from(act);
         activity = act;
+        corner = activity.getResources().getDimensionPixelSize(R.dimen.icon_size_middle) / 2;
     }
 
 
@@ -43,32 +49,34 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         return new FollowersViewHolder(view);
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull final FollowersViewHolder followersViewHolder, int i) {
-        final int position = i;
+    private static void getFollowerAvatar(final Activity activity,final JumblrClient client,final User follower, final Observer observer) {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                String avatarUrl = client.blogAvatar(String.format(activity.getString(R.string.title_blog), followers.get(position).getName()));
-                HttpURLConnection connection = null;
-                try {
-                    connection = (HttpURLConnection) new URL(avatarUrl).openConnection();
-                    InputStream stream = connection.getInputStream();
-                    avatarBitmap = BitmapFactory.decodeStream(stream);
-                    activity.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            followersViewHolder.avatarFollower.setImageBitmap(avatarBitmap);
-                            followersViewHolder.nameFollowerTextView.setText(followers.get(position).getName());
-                        }
-                    });
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                String avatarUrl = client.blogAvatar(String.format(activity.getString(R.string.title_blog), follower.getName()));
+                observer.update(null, avatarUrl);
             }
         }).start();
+    }
 
+    @Override
+    public void onBindViewHolder(@NonNull final FollowersViewHolder followersViewHolder, int i) {
+        followersViewHolder.avatarFollower.setImageResource(R.drawable.text_tumblr_com);
+        getFollowerAvatar(activity,client,followers.get(followersViewHolder.getAdapterPosition()), new Observer() {
+            @Override
+            public void update(Observable observable, final Object o) {
+                activity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        GlideApp.with(activity)
+                                .load((String) o)
+                                .transform(new RoundedCorners(corner))
+                                .into(followersViewHolder.avatarFollower);
+                    }
+                });
+            }
+        });
+        followersViewHolder.nameFollowerTextView.setText(followers.get(i).getName());
 
     }
 

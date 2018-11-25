@@ -5,6 +5,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -35,7 +37,12 @@ public class FollowersFragment extends Fragment {
         recyclerView = fragmentView.findViewById(R.id.followers_recycler);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        if (getContext() != null) {
+            DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
 
+            myDivider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_decoration));
+            recyclerView.addItemDecoration(myDivider);
+        }
         return fragmentView;
     }
 

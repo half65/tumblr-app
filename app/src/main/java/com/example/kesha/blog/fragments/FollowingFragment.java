@@ -1,10 +1,10 @@
 package com.example.kesha.blog.fragments;
 
-import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -12,7 +12,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.kesha.blog.Constants;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.tumblr.jumblr.JumblrClient;
@@ -20,8 +19,6 @@ import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.User;
 
 import java.util.List;
-
-import static android.content.Context.MODE_PRIVATE;
 
 
 public class FollowingFragment extends Fragment {
@@ -40,6 +37,11 @@ public class FollowingFragment extends Fragment {
         recyclerView = fragmentView.findViewById(R.id.following_recycler);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        if (getContext() != null) {
+            DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
+            myDivider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_decoration));
+            recyclerView.addItemDecoration(myDivider);
+        }
         return fragmentView;
     }
 
@@ -50,21 +52,18 @@ public class FollowingFragment extends Fragment {
             public void run() {
                 Log.e(TAG, "=========== > START GET FOLLOWING!!!");
                 if (getActivity() != null && isAdded()) {
-                    User user = client.user();
-                    if (getActivity() != null) {
-                        blogs = client.userFollowing();
+                    blogs = client.userFollowing();
 
-                        if (getActivity() != null) {
-                            getActivity().runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (getActivity() != null) {
-                                        FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
-                                        recyclerView.setAdapter(followingAdapter);
-                                    }
+                    if (getActivity() != null) {
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (getActivity() != null) {
+                                    FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
+                                    recyclerView.setAdapter(followingAdapter);
                                 }
-                            });
-                        }
+                            }
+                        });
                     }
                 }
             }
