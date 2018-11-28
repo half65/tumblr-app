@@ -12,7 +12,7 @@
                 android:tint="@color/colorStartRegistration">
                 <corners android:radius="10dp" />
                 <solid android:color="@color/colorStartRegistration" />
-                <padding android:bottom="6dp" />
+                <padding android:bottom="60dp" />
             </shape>
         </item>
     </ripple>

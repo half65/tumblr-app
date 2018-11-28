@@ -1,7 +1,9 @@
-package com.example.kesha.blog;
+package com.example.kesha.blog.UtilsPackage;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+
+import com.example.kesha.blog.TumblrApplication;
 
 import static android.content.Context.MODE_PRIVATE;
 

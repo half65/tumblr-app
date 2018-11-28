@@ -6,14 +6,15 @@
     tools:context=".fragments.InfoFragment">
 
     <RelativeLayout
+        android:id="@+id/info_relative_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:ignore="UselessParent">
 
         <ImageView
             android:id="@+id/avatarImageView"
-            android:layout_width="150dp"
-            android:layout_height="150dp"
+            android:layout_width="@dimen/icon_size_avatar_user_info"
+            android:layout_height="@dimen/icon_size_avatar_user_info"
             android:layout_alignParentStart="true"
             android:layout_alignParentLeft="true"
             android:layout_marginVertical="8dp"
@@ -27,23 +28,23 @@
             android:id="@+id/nameTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="center"
             android:layout_marginStart="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_toRightOf="@+id/avatarImageView"
             android:layout_marginLeft="40dp"
-            android:layout_toEndOf="@+id/avatarImageView" />
+            android:layout_marginTop="15dp"
+            android:layout_toEndOf="@+id/avatarImageView"
+            android:layout_toRightOf="@+id/avatarImageView"
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/postsTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/nameTextView"
-            android:gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
             android:layout_toRightOf="@+id/avatarImageView"
+            android:gravity="center"
             tools:ignore="RtlHardcoded" />
 
         <TextView
@@ -51,32 +52,40 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/postsTextView"
-            android:gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/avatarImageView"
             android:layout_toRightOf="@+id/avatarImageView"
-            android:layout_toEndOf="@+id/avatarImageView" />
+            android:gravity="center" />
 
         <TextView
             android:id="@+id/followingTextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/followersTextView"
-            android:gravity="center"
             android:layout_marginStart="40dp"
             android:layout_marginLeft="40dp"
             android:layout_marginTop="20dp"
+            android:layout_toEndOf="@+id/avatarImageView"
             android:layout_toRightOf="@+id/avatarImageView"
-            android:layout_toEndOf="@+id/avatarImageView" />
+            android:gravity="center" />
 
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/informationRecycler"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="20dp"
-            android:layout_below="@+id/avatarImageView"/>
+            android:layout_below="@+id/avatarImageView"
+            android:layout_marginTop="20dp" />
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressBar_info_fragment"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
 
 </FrameLayout>

@@ -74,4 +74,10 @@ public class WebViewActivity extends AppCompatActivity {
         });
 
     }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        setResult(RESULT_CANCELED);
+    }
 }

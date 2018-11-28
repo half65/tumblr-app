@@ -5,8 +5,8 @@
         android:drawable="@color/dark"/>
 
     <item>
-        <bitmap android:src="@drawable/background_splash_screen"
-            android:gravity="center" />
+        <bitmap android:src="@drawable/splash_scren_image"
+             />
     </item>
 
 </layer-list>

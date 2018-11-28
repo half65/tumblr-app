@@ -1,152 +1,119 @@
 package com.example.kesha.blog.fragments;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.kesha.blog.Constants;
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.UtilsPackage.GlideApp;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.TumblrApplication;
-import com.tumblr.jumblr.JumblrClient;
+import com.example.kesha.blog.UtilsPackage.Utils;
+import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.User;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
-import static android.content.Context.MODE_PRIVATE;
+import java.util.List;
 
 public class InfoFragment extends Fragment {
     private final String TAG = InfoFragment.class.getSimpleName();
     private ImageView avatarImageView;
+    private RelativeLayout relativeLayout;
+    private ProgressBar progressBar;
     private TextView nameTextView;
     private TextView postsTextView;
     private TextView followersTextView;
     private TextView followingTextView;
-    private RecyclerView informationRecycler;
-    private String accessTokenKey;
-    private String accessSecretTokenKey;
-    private User user;
-    private SharedPreferences sPref;
-    private Bitmap avatarBitmap;
-    private int followerCount;
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-    }
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View fragmentView = inflater.inflate(R.layout.fragment_info, container, false);
-
+        View fragmentView = inflater.inflate(R.layout.info_fragment, container, false);
+        relativeLayout = fragmentView.findViewById(R.id.info_relative_layout);
+        relativeLayout.setVisibility(View.GONE);
+        progressBar = fragmentView.findViewById(R.id.progressBar_info_fragment);
+        progressBar.setVisibility(View.VISIBLE);
+        progressBar.setIndeterminate(true);
         avatarImageView = fragmentView.findViewById(R.id.avatarImageView);
         nameTextView = fragmentView.findViewById(R.id.nameTextView);
         postsTextView = fragmentView.findViewById(R.id.postsTextView);
         followersTextView = fragmentView.findViewById(R.id.followersTextView);
         followingTextView = fragmentView.findViewById(R.id.followingTextView);
-        informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
+        RecyclerView informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         informationRecycler.setLayoutManager(manager);
-        if (getContext() != null) {
-            getInfo(getContext());
-        }
         return fragmentView;
     }
 
-    public void setAvatarImageView(Bitmap avatar) {
-        avatarImageView.setImageBitmap(avatar);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+        getInfo();
     }
 
-    public void setNameTextView(String name) {
-        nameTextView.setText(name);
+
+    private void fillData(User user, Blog blog, String avatarUrl, int followers) {
+        if (getActivity() != null && isAdded()) {
+            //process user data
+            nameTextView.setText(user.getName());
+            followingTextView.setText(getActivity().getString(R.string.text_info_following_count, user.getFollowingCount()));
+
+            //process blog data
+            if (!TextUtils.isEmpty(avatarUrl)) {
+                GlideApp.with(getActivity())
+                        .load(avatarUrl)
+                        .placeholder(R.drawable.text_tumblr_com)
+                        .transform(new RoundedCorners(getActivity()
+                                .getResources()
+                                .getDimensionPixelSize(R.dimen.icon_size_avatar_user_info)/2))
+                        .into(avatarImageView);
+            }
+            postsTextView.setText(getActivity().getString(R.string.text_info_posts_count, blog.getPostCount()));
+            followersTextView.setText(getActivity().getString(R.string.text_info_followers_count, followers));
+            relativeLayout.setVisibility(View.VISIBLE);
+            progressBar.setIndeterminate(false);
+            progressBar.setVisibility(View.GONE);
+        }
     }
 
-    public void setPostsTextView(String posts) {
-        postsTextView.setText(posts);
-    }
-
-    public void setFollowersTextView(String followers) {
-        followersTextView.setText(followers);
-    }
-
-    public void setFollowingTextView(String following) {
-        followingTextView.setText(following);
-    }
-
-    public void setInformationRecycler() {
-
-    }
-
-    private void getInfo(Context context) {
-
-        new Thread(new Runnable() {
+    private void getInfo() {
+        Utils.loadUserInfo(new Utils.JumblrUserInfoCallback() {
             @Override
-            public void run() {
-                Log.e(TAG, "=========== > START GET INFO!!!");
+            public void onUserInfoLoaded(final User user, final Blog userBlog, final String avatarUrl, final List<User> followers) {
                 if (getActivity() != null) {
-                    JumblrClient client = TumblrApplication.getClient();
-                    if (getActivity() != null) {
-                        final User user = client.user();
-                        if (getActivity() != null) {
-                            followerCount = user.getBlogs().get(0).followers().size();
-                            if (getActivity() != null) {
-                                String avatarUrl = user.getBlogs().get(0).avatar(512);
-                                HttpURLConnection connection = null;
-                                try {
-                                    connection = (HttpURLConnection) new URL(avatarUrl).openConnection();
-                                    InputStream stream = connection.getInputStream();
-                                    avatarBitmap = BitmapFactory.decodeStream(stream);
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-                                }
-
-
-                                if (getActivity() != null) {
-                                    getActivity().runOnUiThread(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            if (getActivity() != null) {
-                                                avatarImageView.setImageBitmap(avatarBitmap);
-                                                setNameTextView(user.getName());
-                                                if (getActivity() != null) {
-                                                    setPostsTextView(String.format(getString(R.string.text_info_posts_count)
-                                                            , user.getBlogs().get(0).getPostCount()));
-                                                    if (getActivity() != null) {
-                                                        setFollowersTextView(String.format(getString(R.string.text_info_follower_count)
-                                                                , followerCount));
-                                                        if (getActivity() != null) {
-                                                            setFollowingTextView(String.format(getString(R.string.text_info_following_count)
-                                                                    , user.getFollowingCount()));
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    });
-                                }
-                            }
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            fillData(user, userBlog, avatarUrl, followers.size());
                         }
-                    }
+                    });
+
                 }
             }
-        }).start();
+
+            @Override
+            public void onLoadFailed(final String reason) {
+                if (getActivity() != null) {
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), reason, Toast.LENGTH_LONG).show();
+                        }
+                    });
+
+                }
+            }
+        });
     }
 
 }

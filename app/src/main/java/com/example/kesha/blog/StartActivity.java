@@ -7,7 +7,10 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 
+import com.example.kesha.blog.UtilsPackage.Constants;
+import com.example.kesha.blog.UtilsPackage.PreferencesStorage;
 import com.github.scribejava.apis.TumblrApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;
@@ -19,7 +22,7 @@ import java.util.concurrent.ExecutionException;
 
 public class StartActivity extends AppCompatActivity {
     private static final String TAG = StartActivity.class.getSimpleName();
-
+    private Button startAuchBtn;
     private static final int REQUEST_CODE_AUTH = 33;
 
     private OAuth10aService oAuthService;
@@ -28,15 +31,22 @@ public class StartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+       // overridePendingTransition(android.R.anim.accelerate_interpolator,android.R.anim.overshoot_interpolator);
         setContentView(R.layout.start_activity);
-        findViewById(R.id.registration_btn).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                findViewById(R.id.registration_btn).setClickable(false);
-                authentication();
-            }
-        });
+        startAuchBtn = findViewById(R.id.registration_btn);
+        startAuchBtn.setOnClickListener(startAuthBtnListener);
     }
+
+
+    View.OnClickListener startAuthBtnListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            startAuchBtn.setClickable(false);
+            authentication();
+        }
+    };
+
+
 
     private void authentication() {
         oAuthService = new ServiceBuilder(Constants.consumerKey)
@@ -77,8 +87,12 @@ public class StartActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE_AUTH && resultCode == Activity.RESULT_OK && data != null) {
+            startAuchBtn.setVisibility(View.GONE);
             processVerifier(data.getStringExtra(WebViewActivity.RES_AUTH_VERIFIER));
+        }else {
+            startAuchBtn.setClickable(true);
         }
+
     }
 
     private void processVerifier(final String oauthVerifier) {
@@ -108,13 +122,20 @@ public class StartActivity extends AppCompatActivity {
                             @Override
                             public void run() {
                                 Intent intent = new Intent(StartActivity.this, MainActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_SINGLE_TOP);
                                 startActivity(intent);
+                                finish();
                             }
                         });
                     }
                 }
             }
         }).start();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
     }
 }
