@@ -85,7 +85,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
         long dv = date * 1000;// its need to be in milisecond
         Date df = new java.util.Date(dv);
         @SuppressLint("SimpleDateFormat")
-        String newFormatDate = new SimpleDateFormat("dd MMMM yyyy, hh:mm").format(df);
+        String newFormatDate = new SimpleDateFormat("dd MMMM yyyy, HH:mm").format(df);
         if (activity != null) {
             return String.format(activity.getString(R.string.updateString), newFormatDate);
         } else {

@@ -86,27 +86,5 @@ public class FollowingFragment extends Fragment {
         });
     }
 }
-    /*private void getFollowing() {
-        final JumblrClient client = TumblrApplication.getClient();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Log.e(TAG, "=========== > START GET FOLLOWING!!!");
-                blogs = client.userFollowing();
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
-                            recyclerView.setAdapter(followingAdapter);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            progressBar.setIndeterminate(false);
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
 
-            }
-        }).start();
-    }*/
 

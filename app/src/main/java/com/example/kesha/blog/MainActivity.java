@@ -13,9 +13,13 @@ import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.postListFragment;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
+import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
+import com.tumblr.jumblr.types.TextPost;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -40,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             tabLayout.getTabAt(i).setIcon(tabIcons[i]);
         }
-        test();
     }
 
 
@@ -62,8 +65,13 @@ public class MainActivity extends AppCompatActivity {
                 Blog blog = client.blogInfo("anime.fyi.tumblr.com");
                 Log.d(TAG,"info blog" + blog.toString());
                 List<Post> posts = client.userDashboard();
-                blog.getUpdated();
-                Log.d(TAG,"post dash" + posts.toString());
+                List<Post> postss = client.blogLikes("keshaplastilin.tumblr.com");
+                Map<String, Object> params = new HashMap<String, Object>();
+                params.put("type", "photo");
+                PhotoPost photoPost = (PhotoPost) posts.get(5);
+                List<Post> postsL = client.blogPosts(String.format("%s.tumblr.com",postss.get(0).getBlogName()), params);
+                Log.d(TAG,"post dash");
+                Log.d(TAG,"post dash");
             }
         }).start();
     }

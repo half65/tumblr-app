@@ -21,12 +21,14 @@ import com.example.kesha.blog.UtilsPackage.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.UtilsPackage.Utils;
 import com.tumblr.jumblr.types.Blog;
+import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.User;
 
 import java.util.List;
 
 public class InfoFragment extends Fragment {
     private final String TAG = InfoFragment.class.getSimpleName();
+    private RecyclerView informationRecycler;
     private ImageView avatarImageView;
     private RelativeLayout relativeLayout;
     private ProgressBar progressBar;
@@ -40,6 +42,7 @@ public class InfoFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.info_fragment, container, false);
         relativeLayout = fragmentView.findViewById(R.id.info_relative_layout);
+        informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
         relativeLayout.setVisibility(View.GONE);
         progressBar = fragmentView.findViewById(R.id.progressBar_info_fragment);
         progressBar.setVisibility(View.VISIBLE);
@@ -49,7 +52,6 @@ public class InfoFragment extends Fragment {
         postsTextView = fragmentView.findViewById(R.id.postsTextView);
         followersTextView = fragmentView.findViewById(R.id.followersTextView);
         followingTextView = fragmentView.findViewById(R.id.followingTextView);
-        RecyclerView informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         informationRecycler.setLayoutManager(manager);
         return fragmentView;
@@ -89,12 +91,14 @@ public class InfoFragment extends Fragment {
     private void getInfo() {
         Utils.loadUserInfo(new Utils.JumblrUserInfoCallback() {
             @Override
-            public void onUserInfoLoaded(final User user, final Blog userBlog, final String avatarUrl, final List<User> followers) {
+            public void onUserInfoLoaded(final User user, final Blog userBlog, final String avatarUrl, final List<User> followers,final List<Post> postLike) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
                             fillData(user, userBlog, avatarUrl, followers.size());
+                            InfoAdapter infoAdapter = new InfoAdapter(getActivity(),postLike);
+                            informationRecycler.setAdapter(infoAdapter);
                         }
                     });
 
