@@ -1,5 +1,6 @@
 package com.example.kesha.blog.fragments;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -12,11 +13,15 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
+import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,6 +45,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final InfoViewHolder infoViewHolder, int i) {
+        final JumblrClient client = TumblrApplication.getClient();
         final ImageView[] postImage = new ImageView[]{infoViewHolder.image1, infoViewHolder.image2
                 , infoViewHolder.image3, infoViewHolder.image4, infoViewHolder.image5, infoViewHolder.image6
                 , infoViewHolder.image7, infoViewHolder.image8, infoViewHolder.image9, infoViewHolder.image10};
@@ -53,13 +59,31 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                         infoViewHolder.postText.setText((textPost.getTitle()));
                         break;
                     case PHOTO:
+                        final Blog blog = client.blogInfo(String.format("%s.tumblr.com",posts.get(position).getBlogName()));
+                        final String avatarPostUrl = blog.avatar(256);
+                        activity.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                GlideApp.with(activity)
+                                        .load(avatarPostUrl)
+                                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                        .into(infoViewHolder.blogAvatar);
+                                infoViewHolder.blogName.setText(blog.getName());
+                            }
+                        });
+                        @SuppressLint("SimpleDateFormat")
+                        String newFormatDate = new SimpleDateFormat("dd MMM, HH:mm")
+                                .format(new java.util.Date(posts.get(position).getTimestamp()*1000));
+                        infoViewHolder.timePost.setText(newFormatDate);
+
                         for (int j = 0; j <((PhotoPost) posts.get(position)).getPhotos().size() ; j++) {
 
-                            final String url = ((PhotoPost) posts.get(position)).getPhotos().get(j).getSizes().get(0).getUrl();
+                            final String url = ((PhotoPost) posts.get(position)).getPhotos().get(j).getSizes().get(5).getUrl();
                             final int iteration = j;
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
+                                    postImage[iteration].setMaxHeight(((PhotoPost) posts.get(position)).getPhotos().get(iteration).getOriginalSize().getHeight());
                                     GlideApp.with(activity)
                                             .load(url)
                                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
