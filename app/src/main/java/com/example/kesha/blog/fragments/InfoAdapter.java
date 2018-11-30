@@ -7,7 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -45,10 +47,16 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
     @Override
     public void onBindViewHolder(@NonNull final InfoViewHolder infoViewHolder, int i) {
+        infoViewHolder.progressbarLayout.setVisibility(View.VISIBLE);
+        infoViewHolder.progressBar.setVisibility(View.VISIBLE);
+        infoViewHolder.progressBar.setIndeterminate(true);
         final JumblrClient client = TumblrApplication.getClient();
         final ImageView[] postImage = new ImageView[]{infoViewHolder.image1, infoViewHolder.image2
                 , infoViewHolder.image3, infoViewHolder.image4, infoViewHolder.image5, infoViewHolder.image6
                 , infoViewHolder.image7, infoViewHolder.image8, infoViewHolder.image9, infoViewHolder.image10};
+        for (ImageView aPostImage : postImage) {
+            aPostImage.setVisibility(View.GONE);
+        }
         final int position = i;
         new Thread(new Runnable() {
             @Override
@@ -59,6 +67,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                         infoViewHolder.postText.setText((textPost.getTitle()));
                         break;
                     case PHOTO:
+                        ((PhotoPost) posts.get(position)).getSourceTitle();
                         final Blog blog = client.blogInfo(String.format("%s.tumblr.com",posts.get(position).getBlogName()));
                         final String avatarPostUrl = blog.avatar(256);
                         activity.runOnUiThread(new Runnable() {
@@ -78,30 +87,30 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
                         for (int j = 0; j <((PhotoPost) posts.get(position)).getPhotos().size() ; j++) {
 
-                            final String url = ((PhotoPost) posts.get(position)).getPhotos().get(j).getSizes().get(5).getUrl();
+                            final String url = ((PhotoPost) posts.get(position)).getPhotos().get(j).getSizes().get(1).getUrl();
                             final int iteration = j;
+
                             activity.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    postImage[iteration].setMaxHeight(((PhotoPost) posts.get(position)).getPhotos().get(iteration).getOriginalSize().getHeight());
                                     GlideApp.with(activity)
                                             .load(url)
                                             .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                            .placeholder(R.drawable.text_tumblr_com)
                                             .into(postImage[iteration]);
                                     postImage[iteration].setVisibility(View.VISIBLE);
                                 }
                             });
                         }
-
-
-                        /*activity.runOnUiThread(new Runnable() {
+                        activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                PostAdapter postAdapter = new PostAdapter(activity,(PhotoPost) posts.get(position));
-                                infoViewHolder.recyclerViewImage.setAdapter(postAdapter);
-                                infoViewHolder.postText.setText(((PhotoPost) posts.get(position)).getCaption());
+                                infoViewHolder.progressbarLayout.setVisibility(View.GONE);
+                                infoViewHolder.progressBar.setVisibility(View.GONE);
+                                infoViewHolder.progressBar.setIndeterminate(false);
+                                infoViewHolder.postLayout.setVisibility(View.VISIBLE);
                             }
-                        });*/
+                        });
 
                         break;
                 }
@@ -117,10 +126,16 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     class InfoViewHolder extends RecyclerView.ViewHolder {
         private TextView postText,blogName,timePost;
         private ImageView blogAvatar,image1,image2,image3,image4,image5,image6,image7,image8,image9,image10;
+        private ProgressBar progressBar;
+        private FrameLayout progressbarLayout;
+        private FrameLayout postLayout;
 
         public InfoViewHolder(View view) {
             super(view);
            //recyclerViewImage = view.findViewById(R.id.info_image_recycler);
+            postLayout = view.findViewById(R.id.post_frame_layout);
+            progressbarLayout = view.findViewById(R.id.post_progressbar_layout);
+            progressBar = view.findViewById(R.id.progressBar);
            postText = view.findViewById(R.id.text_post_info_recycler);
             blogName = view.findViewById(R.id.blog_name_info_recycler_textview);
             timePost = view.findViewById(R.id.time_info_recycler_textview);

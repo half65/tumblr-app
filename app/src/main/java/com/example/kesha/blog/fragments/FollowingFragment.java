@@ -8,7 +8,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.UtilsPackage.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
