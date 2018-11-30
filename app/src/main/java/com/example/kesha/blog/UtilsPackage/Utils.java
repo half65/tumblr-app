@@ -17,9 +17,23 @@ public class Utils {
     private static final String TAG = Utils.class.getSimpleName();
 
     public interface JumblrUserInfoCallback {
-        void onUserInfoLoaded(User user, Blog userBlog, String avatarUrl, List<User> followers,List<Post> postLike);
+        void onUserInfoLoaded(User user, Blog userBlog, List<User> followers,List<Post> postLike);
 
         void onLoadFailed(String reason);
+    }
+
+
+    private static String blogPath(String blogName, String extPath) {
+        return "/blog/" + blogUrl(blogName) + extPath;
+    }
+
+    private static String blogUrl(String blogName) {
+        return blogName.contains(".") ? blogName : blogName + ".tumblr.com";
+    }
+
+    public static String getAvatarUrl(String blogName, int size) {
+        String pathExt = "/" + size;
+        return blogPath(blogName, "/avatar" + pathExt);
     }
 
     public static void loadUserInfo(final JumblrUserInfoCallback callback) {
@@ -30,10 +44,9 @@ public class Utils {
                 try {
                     User user = client.user();
                     Blog blog = user.getBlogs().get(0);
-                    String avatarUrl = blog.avatar(512);
                     List<User> followers = blog.followers();
                     List<Post> posts = client.blogLikes(String.format("%s.tumblr.com",blog.getName()));
-                    callback.onUserInfoLoaded(user, blog, avatarUrl, followers,posts);
+                    callback.onUserInfoLoaded(user, blog, followers,posts);
                 } catch (Exception e) {
                     Log.println(Log.ASSERT, TAG, "loadUserInfo exception: " + e.toString());
                     callback.onLoadFailed(e.toString());

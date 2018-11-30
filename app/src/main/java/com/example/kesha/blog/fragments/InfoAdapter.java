@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.example.kesha.blog.UtilsPackage.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.PhotoPost;
@@ -69,7 +70,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                     case PHOTO:
                         ((PhotoPost) posts.get(position)).getSourceTitle();
                         final Blog blog = client.blogInfo(String.format("%s.tumblr.com",posts.get(position).getBlogName()));
-                        final String avatarPostUrl = blog.avatar(256);
+                        final String avatarPostUrl = Utils.getAvatarUrl(blog.getName(), 256);
                         activity.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {

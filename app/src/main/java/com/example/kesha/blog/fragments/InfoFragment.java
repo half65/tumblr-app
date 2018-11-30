@@ -64,12 +64,13 @@ public class InfoFragment extends Fragment {
     }
 
 
-    private void fillData(User user, Blog blog, String avatarUrl, int followers) {
+    private void fillData(User user, Blog blog, int followers) {
         if (getActivity() != null && isAdded()) {
             //process user data
             nameTextView.setText(user.getName());
             followingTextView.setText(getActivity().getString(R.string.text_info_following_count, user.getFollowingCount()));
 
+            String avatarUrl = Utils.getAvatarUrl(blog.getName(), 512);
             //process blog data
             if (!TextUtils.isEmpty(avatarUrl)) {
                 GlideApp.with(getActivity())
@@ -91,12 +92,12 @@ public class InfoFragment extends Fragment {
     private void getInfo() {
         Utils.loadUserInfo(new Utils.JumblrUserInfoCallback() {
             @Override
-            public void onUserInfoLoaded(final User user, final Blog userBlog, final String avatarUrl, final List<User> followers,final List<Post> postLike) {
+            public void onUserInfoLoaded(final User user, final Blog userBlog, final List<User> followers,final List<Post> postLike) {
                 if (getActivity() != null) {
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            fillData(user, userBlog, avatarUrl, followers.size());
+                            fillData(user, userBlog, followers.size());
                             InfoAdapter infoAdapter = new InfoAdapter(getActivity(),postLike);
                             informationRecycler.setAdapter(infoAdapter);
                         }
