@@ -24,14 +24,23 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
+        <ProgressBar
+            android:id="@+id/progress_bar_post"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center" />
+
         <LinearLayout
+            android:id="@+id/post_liked_linear"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
             android:paddingLeft="10dp"
             android:paddingTop="4dp"
             android:paddingRight="10dp"
-            android:paddingBottom="4dp">
+            android:paddingBottom="4dp"
+            android:visibility="gone">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -64,7 +73,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
                         android:paddingLeft="4dp"
-                        android:text="blogName"
                         android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
                         android:visibility="visible" />
 
@@ -74,7 +82,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:paddingLeft="4dp"
-                        android:text="time"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
                         android:visibility="visible" />
 
@@ -86,7 +93,6 @@
                 android:id="@+id/grid_root_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginLeft="10dp"
                 android:layout_marginTop="4dp"
                 android:layout_marginRight="10dp"
@@ -109,6 +115,29 @@
                     android:text="body"
                     android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
                     android:visibility="gone" />
+
+                <LinearLayout
+                    android:id="@+id/grid_root_tag_linear_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal"
+                    android:paddingLeft="4dp"
+                    android:paddingRight="4dp"
+                    android:visibility="visible">
+
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <LinearLayout
+                            android:id="@+id/tag_linear_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_marginLeft="13dp"
+                            android:layout_marginRight="13dp"
+                            android:orientation="horizontal" />
+                    </HorizontalScrollView>
+                </LinearLayout>
 
             </LinearLayout>
         </LinearLayout>

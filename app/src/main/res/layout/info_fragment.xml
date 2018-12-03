@@ -33,7 +33,9 @@
             android:layout_marginTop="15dp"
             android:layout_toEndOf="@+id/avatarImageView"
             android:layout_toRightOf="@+id/avatarImageView"
-            android:gravity="center" />
+            android:gravity="center"
+            android:textSize="@dimen/font_size_username"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/postsTextView"

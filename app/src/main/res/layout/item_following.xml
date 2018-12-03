@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="65dp">
+    android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/avatar_following_imgView"
@@ -11,35 +10,34 @@
         android:layout_height="@dimen/icon_size_middle"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
+        android:layout_centerVertical="true"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:contentDescription="@string/avatar_follower_descr"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         tools:srcCompat="@tools:sample/avatars" />
 
-    <TextView
-        android:id="@+id/name_following_txtview"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/avatar_following_imgView"
+        android:layout_toEndOf="@+id/avatar_following_imgView"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:layout_marginTop="8dp"
-        android:textAppearance="@style/TextAppearance.Design.Snackbar.Message"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@+id/avatar_following_imgView"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/date_update_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="38dp"
-        android:layout_marginBottom="8dp"
-        android:textAppearance="@style/TextAppearance.Design.HelperText"
-        android:textColor="@color/colorTextHintStartActivity"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="@+id/name_following_txtview"
-        app:layout_constraintTop_toTopOf="parent" />
-</android.support.constraint.ConstraintLayout>
+        <TextView
+            android:id="@+id/name_following_txtview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/date_update_textview"
+            android:textSize="14sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorTextHintStartActivity" />
+    </LinearLayout>
+</RelativeLayout>
