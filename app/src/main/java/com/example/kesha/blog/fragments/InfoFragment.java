@@ -70,6 +70,7 @@ public class InfoFragment extends Fragment {
             nameTextView.setText(user.getName());
             followingTextView.setText(getActivity().getString(R.string.text_info_following_count, user.getFollowingCount()));
 
+            avatarUrl = Utils.getAvatarUrl(blog.getName(), 512);
             //process blog data
             if (!TextUtils.isEmpty(avatarUrl)) {
                 GlideApp.with(getActivity())

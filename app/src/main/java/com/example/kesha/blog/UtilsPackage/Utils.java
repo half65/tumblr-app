@@ -17,11 +17,26 @@ import java.util.Map;
 
 public class Utils {
     private static final String TAG = Utils.class.getSimpleName();
+    private static final String HOSTNAME = "api.tumblr.com";
 
     public interface JumblrUserInfoCallback {
         void onUserInfoLoaded(User user, Blog userBlog, String avatarUrl, List<User> followers,List<Post> postLike);
 
         void onLoadFailed(String reason);
+    }
+
+
+    private static String blogPath(String blogName, String extPath) {
+        return "https://" + HOSTNAME + "/v2" + "/blog/" + blogUrl(blogName) + extPath;
+    }
+
+    private static String blogUrl(String blogName) {
+        return blogName.contains(".") ? blogName : blogName + ".tumblr.com";
+    }
+
+    public static String getAvatarUrl(String blogName, int size) {
+        String pathExt = "/" + size;
+        return blogPath(blogName, "/avatar" + pathExt);
     }
 
     public static void loadUserInfo(final JumblrUserInfoCallback callback) {
