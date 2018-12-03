@@ -11,7 +11,9 @@ import com.tumblr.jumblr.types.TextPost;
 import com.tumblr.jumblr.types.User;
 import com.tumblr.jumblr.types.VideoPost;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Utils {
     private static final String TAG = Utils.class.getSimpleName();
@@ -32,7 +34,9 @@ public class Utils {
                     Blog blog = user.getBlogs().get(0);
                     String avatarUrl = blog.avatar(512);
                     List<User> followers = blog.followers();
-                    List<Post> posts = client.blogLikes(String.format("%s.tumblr.com",blog.getName()));
+                    Map<String, Object> params = new HashMap<String, Object>();
+                    params.put("limit", 100);
+                    List<Post> posts = client.blogLikes(String.format("%s.tumblr.com",blog.getName()),params);
                     callback.onUserInfoLoaded(user, blog, avatarUrl, followers,posts);
                 } catch (Exception e) {
                     Log.println(Log.ASSERT, TAG, "loadUserInfo exception: " + e.toString());
