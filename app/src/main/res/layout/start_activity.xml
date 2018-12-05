@@ -18,7 +18,6 @@
         android:layout_marginBottom="112dp"
         android:alpha="1"
         android:background="@drawable/start_registration_btn"
-        android:hint="рптвп"
         android:paddingLeft="12dp"
         android:paddingTop="10dp"
         android:paddingRight="12dp"
@@ -29,55 +28,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.493"
         app:layout_constraintStart_toStartOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/textView"
-        android:layout_width="100dp"
-        android:layout_height="200dp"
-        android:layout_marginStart="80dp"
-        android:layout_marginLeft="80dp"
-        android:layout_marginTop="106dp"
-        android:layout_marginBottom="128dp"
-        android:alpha="0.7"
-        android:background="@drawable/rect_start_activity"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/registration_btn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:ignore="MissingConstraints" />
-
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="100dp"
-        android:layout_height="128dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:layout_marginBottom="8dp"
-        android:alpha="0.7"
-        android:background="@drawable/rect_red_start_activity"
-        android:visibility="gone"
-        app:layout_constraintBottom_toTopOf="@+id/registration_btn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toBottomOf="@+id/textView3"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="100dp"
-        android:layout_height="70dp"
-        android:layout_marginTop="106dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginRight="8dp"
-        android:alpha="0.7"
-        android:background="@drawable/rect_yellou_start_activity"
-        android:visibility="gone"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toEndOf="@+id/textView"
-        app:layout_constraintTop_toTopOf="parent" />
+        tools:ignore="MissingConstraints,RtlHardcoded" />
 
     <TextView
         android:id="@+id/textView4"
@@ -86,9 +37,10 @@
         android:layout_marginLeft="1dp"
         android:layout_marginBottom="16dp"
         android:gravity="center"
-        android:text="Данное приложение не является официальным и используется только в целях изучения программирования. "
+        android:text="@string/bottomTextStartActivity"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/colorTextHintStartActivity"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        tools:ignore="RtlHardcoded" />
 </android.support.constraint.ConstraintLayout>

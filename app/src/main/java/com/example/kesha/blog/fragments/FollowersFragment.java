@@ -84,29 +84,5 @@ public class FollowersFragment extends Fragment {
         });
     }
 }
-    /*private void getFollowers() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                User user = client.user();
-                final List<User> users = client.blogFollowers(String.format("%s.tumblr.com", user.getBlogs().get(0).getName()));
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            FollowersAdapter followersAdapter = new FollowersAdapter(activity, users, client);
-                            recyclerView.setAdapter(followersAdapter);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            progressBar.setIndeterminate(false);
-                            progressBar.setVisibility(View.GONE);
-                        }
-                    });
-                }
-
-            }
-        }).start();
-
-
-    }*/
 
 

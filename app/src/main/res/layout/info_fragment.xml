@@ -21,7 +21,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginLeft="8dp"
             android:contentDescription="@string/me_avatar"
-            tools:ignore="UnusedAttribute"
+            tools:ignore="RtlHardcoded,UnusedAttribute"
             tools:src="@tools:sample/avatars" />
 
         <TextView
@@ -35,7 +35,8 @@
             android:layout_toRightOf="@+id/avatarImageView"
             android:gravity="center"
             android:textSize="@dimen/font_size_username"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/postsTextView"
@@ -59,7 +60,8 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/avatarImageView"
             android:layout_toRightOf="@+id/avatarImageView"
-            android:gravity="center" />
+            android:gravity="center"
+            tools:ignore="RtlHardcoded" />
 
         <TextView
             android:id="@+id/followingTextView"
@@ -71,7 +73,8 @@
             android:layout_marginTop="20dp"
             android:layout_toEndOf="@+id/avatarImageView"
             android:layout_toRightOf="@+id/avatarImageView"
-            android:gravity="center" />
+            android:gravity="center"
+            tools:ignore="RtlHardcoded" />
 
 
         <android.support.v7.widget.RecyclerView

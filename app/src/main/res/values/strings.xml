@@ -15,5 +15,7 @@
     <string name="avatar_follower_descr">avatar follower</string>
     <string name="updateString">Последнее обновление %s</string>
     <string name="post_image">post_image</string>
+    <string name="bottomTextStartActivity">Данное приложение не является официальным и используется только в целях изучения программирования.</string>
+    <string name="blog_avatar">blog_avatar</string>
 
 </resources>

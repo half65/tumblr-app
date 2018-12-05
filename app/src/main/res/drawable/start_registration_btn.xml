@@ -9,9 +9,9 @@
         tools:ignore="NewApi">
         <item>
             <shape android:shape="rectangle"
-                android:tint="@color/colorStartRegistration">
+                android:tint="@color/colorStartRegistrationBtn">
                 <corners android:radius="10dp" />
-                <solid android:color="@color/colorStartRegistration" />
+                <solid android:color="@color/colorStartRegistrationBtn" />
                 <padding android:bottom="60dp" />
             </shape>
         </item>

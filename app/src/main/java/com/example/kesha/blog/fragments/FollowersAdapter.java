@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.example.kesha.blog.UtilsPackage.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
 
@@ -44,34 +45,16 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         return new FollowersViewHolder(view);}return null;
     }
 
-    private static void getFollowerAvatar(final JumblrClient client,final User follower, final Observer observer) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String avatarUrl = client.blogAvatar(String.format("%s.tumblr.com", follower.getName()));
-                observer.update(null, avatarUrl);
-            }
-        }).start();
-    }
-
     @Override
     public void onBindViewHolder(@NonNull final FollowersViewHolder followersViewHolder, int i) {
         followersViewHolder.avatarFollower.setImageResource(R.drawable.text_tumblr_com);
-        getFollowerAvatar(client,followers.get(followersViewHolder.getAdapterPosition()), new Observer() {
-            @Override
-            public void update(Observable observable, final Object o) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        GlideApp.with(activity)
-                                .load((String) o)
+        String avatarUrl = Utils.getAvatarUrl(followers.get(followersViewHolder.getAdapterPosition()).getName(), 512);
+                GlideApp.with(activity)
+                                .load(avatarUrl)
                                 .transform(new RoundedCorners(corner))
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                 .into(followersViewHolder.avatarFollower);
-                    }
-                });
-            }
-        });
+
         followersViewHolder.nameFollowerTextView.setText(followers.get(i).getName());
 
     }

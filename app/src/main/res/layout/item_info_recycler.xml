@@ -25,11 +25,12 @@
 
 
         <ProgressBar
-            android:id="@+id/progress_bar_post"
+            android:id="@+id/progress_bar_liked_post"
             style="?android:attr/progressBarStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center" />
+            android:layout_gravity="center"
+            tools:visibility="gone" />
 
         <LinearLayout
             android:id="@+id/post_liked_linear"
@@ -40,7 +41,7 @@
             android:paddingTop="4dp"
             android:paddingRight="10dp"
             android:paddingBottom="4dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -55,10 +56,11 @@
                     android:id="@+id/avatar_post_info_recycler_test_image"
                     android:layout_width="70dp"
                     android:layout_height="70dp"
-                    android:layout_marginLeft="4dp"
+                    android:layout_marginStart="4dp"
                     android:layout_weight="1"
                     android:visibility="visible"
-                    tools:srcCompat="@tools:sample/avatars[11]" />
+                    tools:srcCompat="@tools:sample/avatars[11]"
+                    android:contentDescription="@string/blog_avatar" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -72,18 +74,20 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="8dp"
-                        android:paddingLeft="4dp"
+                        android:paddingStart="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.SearchResult.Title"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        tools:ignore="RtlSymmetry" />
 
                     <TextView
                         android:id="@+id/time_info_recycler_textview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
-                        android:paddingLeft="4dp"
+                        android:paddingStart="4dp"
                         android:textAppearance="@android:style/TextAppearance.StatusBar.EventContent"
-                        android:visibility="visible" />
+                        android:visibility="visible"
+                        tools:ignore="RtlSymmetry" />
 
                 </LinearLayout>
 
@@ -104,42 +108,72 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+                <TextView
+                    android:id="@+id/text_body_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginRight="10dp"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="4dp"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/text_body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
-                    android:padding="10dp"
-                    android:text="body"
-                    android:textAppearance="@style/TextAppearance.MaterialComponents.Caption"
+                    android:maxLines="15"
+                    android:paddingStart="4dp"
+                    android:paddingTop="10dp"
+                    android:scrollbars="vertical"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    tools:ignore="RtlSymmetry" />
+
+                <TextView
+                    android:id="@+id/hint_text_body_text_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:paddingStart="4dp"
+                    android:paddingTop="4dp"
+                    android:textSize="12sp"
+                    android:text="нажмите на текст чтобы свернуть(развернуть)"
+                    android:textColor="@color/colorTextTag"
                     android:visibility="gone" />
 
                 <LinearLayout
                     android:id="@+id/grid_root_tag_linear_layout"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:orientation="horizontal"
-                    android:paddingLeft="4dp"
-                    android:paddingRight="4dp"
+                    android:orientation="vertical"
+                    android:paddingLeft="13dp"
+                    android:paddingRight="13dp"
                     android:visibility="visible">
 
-                    <HorizontalScrollView
+                    <TextView
+                        android:id="@+id/tag_text_liked_post_info_fragm"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:paddingLeft="8dp"
+                        android:paddingRight="8dp"
+                        android:paddingBottom="4dp"
+                        android:textColor="@color/colorTextTag"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
 
-                        <LinearLayout
-                            android:id="@+id/tag_linear_layout"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginLeft="13dp"
-                            android:layout_marginRight="13dp"
-                            android:orientation="horizontal" />
-                    </HorizontalScrollView>
                 </LinearLayout>
 
             </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

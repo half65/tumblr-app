@@ -11,16 +11,12 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
 import com.example.kesha.blog.UtilsPackage.Utils;
-import com.tumblr.jumblr.JumblrClient;
-import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
@@ -35,10 +31,20 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     private LayoutInflater inflater;
     private Activity activity;
 
-    public InfoAdapter(Activity activity, List<Post> posts) {
+    public interface OnInfoAdapterClickListener {
+        void onImageClick(String imageURL);
+
+        void onBodyTextClick(TextView textView);
+    }
+
+    private OnInfoAdapterClickListener onImageClickListener;
+
+
+    public InfoAdapter(Activity activity, List<Post> posts, OnInfoAdapterClickListener listener) {
         this.posts = posts;
         this.activity = activity;
         inflater = activity.getLayoutInflater();
+        onImageClickListener = listener;
     }
 
     @NonNull
@@ -59,9 +65,11 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         infoViewHolder.lickedPostLinear.setVisibility(GONE);
         infoViewHolder.progressBarLickedPost.setIndeterminate(true);
         infoViewHolder.progressBarLickedPost.setVisibility(VISIBLE);
-       // final JumblrClient client = TumblrApplication.getClient();
+        infoViewHolder.tagText.setText(null);
+        infoViewHolder.textBodyTitle.setVisibility(GONE);
+        infoViewHolder.hintTextBody.setVisibility(GONE);
         infoViewHolder.blogAvatar.setImageResource(0);
-        infoViewHolder.blogName.setText("");
+        infoViewHolder.blogName.setText(null);
         infoViewHolder.gridRoot.removeAllViews();
 
         final int position = infoViewHolder.getAdapterPosition();
@@ -86,22 +94,26 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 if (textPost.getBody().contains("img src=\"")) {
                     String[] body = textPost.getBody().split("img src=\"");
                     String[] body2 = body[1].split("\" data-orig-height");
-                    String url = body2[0];
+                    String imageUrl = body2[0];
 
-                    LinearLayout rowLayout = new LinearLayout(activity);
-                    rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                     LinearLayout.LayoutParams rowItemParams = new LinearLayout
                             .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    rowItemParams.weight = 1;
-                    rowItemParams.setMargins(3, 2, 3, 10);
-                    ImageView imageView = new ImageView(activity);
-
-                    GlideApp.with(activity)
-                            .load(url)
-                            .into(imageView);
-                    rowLayout.addView(imageView, rowItemParams);
-                    infoViewHolder.gridRoot.addView(rowLayout);
+                    setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
                 }
+                if (textPost.getTitle() != null) {
+                    infoViewHolder.textBodyTitle.setText(textPost.getTitle());
+                    infoViewHolder.textBodyTitle.setVisibility(VISIBLE);
+                }
+                String textBodyTextPost = android.text.Html.fromHtml(textPost.getBody()).toString();
+                while (textBodyTextPost.charAt(textBodyTextPost.length() - 1) == '\n') {
+                    textBodyTextPost = textBodyTextPost.substring(0, textBodyTextPost.length() - 1);
+                }
+                infoViewHolder.bodyText.setText(textBodyTextPost);
+                infoViewHolder.bodyText.setVisibility(VISIBLE);
+                if(infoViewHolder.bodyText.getLineCount()>15){
+                    infoViewHolder.hintTextBody.setVisibility(VISIBLE);
+                }
+
                 infoViewHolder.progressBarLickedPost.setIndeterminate(false);
                 infoViewHolder.progressBarLickedPost.setVisibility(GONE);
                 infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
@@ -112,15 +124,23 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 PhotoPost ps = (PhotoPost) posts.get(position);
                 String textPhotoPost = ps.getCaption();
                 if (textPhotoPost != null) {
-                    infoViewHolder.bodyText.setText(android.text.Html.fromHtml(textPhotoPost).toString());
+                    String textBodyPhotoPost = android.text.Html.fromHtml(textPhotoPost).toString();
+                    if (textBodyPhotoPost.length() != 0) {
+                        while (textBodyPhotoPost.charAt(textBodyPhotoPost.length() - 1) == '\n') {
+                            textBodyPhotoPost = textBodyPhotoPost.substring(0, textBodyPhotoPost.length() - 1);
+                        }
+                    }
+
+                    infoViewHolder.bodyText.setText(textBodyPhotoPost);
                     infoViewHolder.bodyText.setVisibility(VISIBLE);
+                    if(infoViewHolder.bodyText.getLineCount()>15){
+                        infoViewHolder.hintTextBody.setVisibility(VISIBLE);
+                    }
+
                 }
-                if(ps.getTags()!=null){
-                    for (int j = 0; j <ps.getTags().size() ; j++) {
-                        TextView textTag = new TextView(activity);
-                        textTag.setTextColor(R.color.colorTextTag);
-                        textTag.setText(String.format("#%s ",ps.getTags().get(j)));
-                        infoViewHolder.tagLinearLayout.addView(textTag);
+                if (ps.getTags() != null) {
+                    for (int j = 0; j < ps.getTags().size(); j++) {
+                        infoViewHolder.tagText.append(String.format("#%s ", ps.getTags().get(j)));
                     }
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                 }
@@ -140,51 +160,39 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                         rowItemParams.setMargins(3, 2, 3, 2);
                         for (int k = 0; k < 2; k++) {
                             ImageView imageView = new ImageView(activity);
+                            final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)
-                                    .load(getLikePostImg(((PhotoPost) posts.get(position)), imagePosition))
-
+                                    .load(imageURL)
                                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                     .into(imageView);
                             imageView.setVisibility(VISIBLE);
                             rowLayout.addView(imageView, rowItemParams);
+                            imageView.setOnClickListener(new OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    onImageClickListener.onImageClick(imageURL);
+                                }
+                            });
                             imagePosition++;
                         }
                         infoViewHolder.gridRoot.addView(rowLayout);
                     }
                     if ((total % columns) == 1) {
-                        LinearLayout rowLayout = new LinearLayout(activity);
-                        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                         LinearLayout.LayoutParams rowItemParams = new LinearLayout
                                 .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                        rowItemParams.weight = 1;
-                        rowItemParams.setMargins(3, 2, 3, 10);
-                        ImageView imageView = new ImageView(activity);
-                        GlideApp.with(activity)
-                                .load(getLikePostImg(((PhotoPost) posts.get(position)), imagePosition))
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .into(imageView);
-                        rowLayout.addView(imageView, rowItemParams);
-                        infoViewHolder.gridRoot.addView(rowLayout);
+                        String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
+                        setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
                     }
+
 
                     infoViewHolder.progressBarLickedPost.setIndeterminate(false);
                     infoViewHolder.progressBarLickedPost.setVisibility(GONE);
                     infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 } else {
-                    LinearLayout rowLayout = new LinearLayout(activity);
-                    rowLayout.setOrientation(LinearLayout.HORIZONTAL);
                     LinearLayout.LayoutParams rowItemParams = new LinearLayout
                             .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    rowItemParams.weight = 1;
-                    rowItemParams.setMargins(3, 2, 3, 10);
-
-                    ImageView imageView = new ImageView(activity);
-                    GlideApp.with(activity)
-                            .load(getLikePostImg(((PhotoPost) posts.get(position)), total - 1))
-                            .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                            .into(imageView);
-                    rowLayout.addView(imageView, rowItemParams);
-                    infoViewHolder.gridRoot.addView(rowLayout);
+                    String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), total - 1);
+                    setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
                     infoViewHolder.progressBarLickedPost.setIndeterminate(false);
                     infoViewHolder.progressBarLickedPost.setVisibility(GONE);
                     infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
@@ -192,6 +200,29 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
                 break;
         }
+
+    }
+
+
+    private void setImageLikedPost(LinearLayout.LayoutParams rowItemParams, final String imageUrl
+            , LinearLayout gridRoot) {
+        LinearLayout rowLayout = new LinearLayout(activity);
+        rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+        rowItemParams.weight = 1;
+        rowItemParams.setMargins(3, 2, 3, 10);
+        ImageView imageView = new ImageView(activity);
+        GlideApp.with(activity)
+                .load(imageUrl)
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(imageView);
+        imageView.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onImageClickListener.onImageClick(imageUrl);
+            }
+        });
+        rowLayout.addView(imageView, rowItemParams);
+        gridRoot.addView(rowLayout);
     }
 
     @Override
@@ -200,27 +231,36 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     }
 
     class InfoViewHolder extends RecyclerView.ViewHolder {
-        private TextView bodyText, blogName, timePost;
+        private TextView bodyText, blogName, timePost, tagText, textBodyTitle,hintTextBody;
         private ProgressBar progressBarLickedPost;
         private LinearLayout gridRoot;
         private ImageView blogAvatar;
         private LinearLayout tagRootLinearLayout;
-        private LinearLayout tagLinearLayout;
         private LinearLayout lickedPostLinear;
+        private LinearLayout textPostLinear;
 
+        @SuppressLint("ClickableViewAccessibility")
         public InfoViewHolder(View view) {
             super(view);
-            progressBarLickedPost = view.findViewById(R.id.progress_bar_post);
+            hintTextBody = view.findViewById(R.id.hint_text_body_text_view);
+            textBodyTitle = view.findViewById(R.id.text_body_title);
+            tagText = view.findViewById(R.id.tag_text_liked_post_info_fragm);
+            progressBarLickedPost = view.findViewById(R.id.progress_bar_liked_post);
             lickedPostLinear = view.findViewById(R.id.post_liked_linear);
             tagRootLinearLayout = view.findViewById(R.id.grid_root_tag_linear_layout);
-            tagLinearLayout = view.findViewById(R.id.tag_linear_layout);
+            textPostLinear = view.findViewById(R.id.grid_root_text_linear_layout);
             bodyText = view.findViewById(R.id.text_body);
             gridRoot = view.findViewById(R.id.grid_root_layout);
             blogName = view.findViewById(R.id.blog_name_info_recycler_textview);
             timePost = view.findViewById(R.id.time_info_recycler_textview);
             blogAvatar = view.findViewById(R.id.avatar_post_info_recycler_test_image);
 
-
+            bodyText.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onImageClickListener.onBodyTextClick(bodyText);
+                }
+            });
         }
     }
 }

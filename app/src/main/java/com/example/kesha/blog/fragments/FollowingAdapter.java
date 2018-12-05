@@ -14,14 +14,13 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
 import com.example.kesha.blog.R;
+import com.example.kesha.blog.UtilsPackage.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.FollowingViewHolder> {
     private List<Blog> blogs;
@@ -46,36 +45,16 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
         return new FollowingViewHolder(view);
     }
 
-
-    private static void getFollowingAvatar(final Blog blog, final Observer observer) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                String avatarUrl = blog.avatar(256);
-                observer.update(null, avatarUrl);
-            }
-        }).start();
-    }
-
-
     @Override
     public void onBindViewHolder(@NonNull final FollowingViewHolder followingViewHolder, int i) {
         followingViewHolder.avatarFollowing.setImageResource(R.drawable.text_tumblr_com);
-        getFollowingAvatar(blogs.get(followingViewHolder.getAdapterPosition()), new Observer() {
-            @Override
-            public void update(Observable observable, final Object o) {
-                activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
+        String avatarUrl = Utils.getAvatarUrl(blogs.get(followingViewHolder.getAdapterPosition()).getName(),256);
                         GlideApp.with(activity)
-                                .load((String) o)
+                                .load(avatarUrl)
                                 .transform(new RoundedCorners(corner))
                                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                                 .into(followingViewHolder.avatarFollowing);
-                    }
-                });
-            }
-        });
+
         followingViewHolder.nameFollowingTextView.setText(blogs.get(followingViewHolder.getAdapterPosition()).getName());
         followingViewHolder.dateUpdated.setText(dateConvertFromUNIX(blogs.get(followingViewHolder.getAdapterPosition()).getUpdated()));
 
@@ -105,8 +84,8 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
 
         public FollowingViewHolder(View view) {
             super(view);
-            dateUpdated = view.findViewById(R.id.date_update_textview);
-            nameFollowingTextView = view.findViewById(R.id.name_following_txtview);
+            dateUpdated = view.findViewById(R.id.date_update_text_view);
+            nameFollowingTextView = view.findViewById(R.id.name_following_text_view);
             avatarFollowing = view.findViewById(R.id.avatar_following_imgView);
         }
     }

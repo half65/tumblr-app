@@ -4,8 +4,8 @@
     <color name="colorPrimaryDark">#00574b</color>
     <color name="colorAccent">#D81B60</color>
     <color name="dark">#000000</color>
-    <color name="colorStartRegistration">#3bda5b</color>
+    <color name="colorStartRegistrationBtn">#3bda5b</color>
     <color name="colorTextHintStartActivity">#c9c9c9</color>
-    <color name="colorTextTag">#158cfa</color>
+    <color name="colorTextTag">#a8cef2</color>
     <color name="colorTabIndicator" tools:ignore="MissingDefaultResource">#ffffff</color>
 </resources>
