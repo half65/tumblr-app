@@ -9,14 +9,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.example.kesha.blog.UtilsPackage.Constants;
-import com.example.kesha.blog.UtilsPackage.PreferencesStorage;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.Constants;
+import com.example.kesha.blog.utils.PreferencesStorage;
+import com.example.kesha.blog.utils.Utils;
 import com.github.scribejava.apis.TumblrApi;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth1AccessToken;

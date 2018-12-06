@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
+import com.example.kesha.blog.adapters.InfoAdapter;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Post;
 

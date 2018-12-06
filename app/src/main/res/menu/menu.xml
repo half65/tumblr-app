@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
-    <menu xmlns:android="http://schemas.android.com/apk/res/android" xmlns:app="http://schemas.android.com/apk/res-auto">
-
-    <item android:title="Item" app:showAsAction="ifRoom" android:icon="@android:drawable/ic_menu_revert" android:id="@+id/update"/>
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/update"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:title="Item"
+        app:showAsAction="ifRoom" />
 </menu>

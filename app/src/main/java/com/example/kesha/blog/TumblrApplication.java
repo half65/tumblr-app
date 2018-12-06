@@ -2,8 +2,8 @@ package com.example.kesha.blog;
 
 import android.app.Application;
 
-import com.example.kesha.blog.UtilsPackage.Constants;
-import com.example.kesha.blog.UtilsPackage.PreferencesStorage;
+import com.example.kesha.blog.utils.Constants;
+import com.example.kesha.blog.utils.PreferencesStorage;
 import com.tumblr.jumblr.JumblrClient;
 
 public class TumblrApplication extends Application {

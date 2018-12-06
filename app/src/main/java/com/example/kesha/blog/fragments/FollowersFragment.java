@@ -15,7 +15,8 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.Utils;
+import com.example.kesha.blog.adapters.FollowersAdapter;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
 

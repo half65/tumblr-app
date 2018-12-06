@@ -1,4 +1,4 @@
-package com.example.kesha.blog.fragments;
+package com.example.kesha.blog.adapters;
 
 import android.app.Activity;
 import android.support.annotation.NonNull;
@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.UtilsPackage.GlideApp;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.GlideApp;
+import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
 

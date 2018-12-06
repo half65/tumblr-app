@@ -1,4 +1,4 @@
-package com.example.kesha.blog.fragments;
+package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -16,10 +16,10 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
@@ -31,7 +31,7 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class PostAdapterFragment extends RecyclerView.Adapter<PostAdapterFragment.PhotoPostViewHolder>  {
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostViewHolder>  {
     private LayoutInflater inflater;
     private List<Post> posts;
     private Activity activity;
@@ -48,7 +48,7 @@ public class PostAdapterFragment extends RecyclerView.Adapter<PostAdapterFragmen
 
     private OnPostAdapterClickListener onPostAdapterClickListener;
 
-    public PostAdapterFragment(Activity activity, List<Post> posts, OnPostAdapterClickListener onPostAdapterClickListener) {
+    public PostsAdapter(Activity activity, List<Post> posts, OnPostAdapterClickListener onPostAdapterClickListener) {
         this.posts = posts;
         this.activity = activity;
         inflater = activity.getLayoutInflater();

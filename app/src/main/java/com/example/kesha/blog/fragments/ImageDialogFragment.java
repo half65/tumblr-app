@@ -15,7 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.example.kesha.blog.utils.GlideApp;
 
 public class ImageDialogFragment extends DialogFragment {
     private ImageView imageView;

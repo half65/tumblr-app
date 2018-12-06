@@ -1,4 +1,4 @@
-package com.example.kesha.blog.UtilsPackage;
+package com.example.kesha.blog.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;

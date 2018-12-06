@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
+import com.example.kesha.blog.adapters.PostsAdapter;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.exceptions.JumblrException;
 import com.tumblr.jumblr.types.Post;
@@ -23,12 +24,12 @@ import com.tumblr.jumblr.types.Post;
 import java.util.List;
 
 
-public class PostListFragment extends Fragment implements View.OnClickListener {
+public class PostsFragment extends Fragment implements View.OnClickListener {
 
     private RecyclerView recyclerView;
     private EditText search;
     private Button btnGo;
-    private PostAdapterFragment adapterFragment;
+    private PostsAdapter adapterFragment;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -38,7 +39,7 @@ public class PostListFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         search = fragmentView.findViewById(R.id.editText2);
         btnGo = fragmentView.findViewById(R.id.button);
-        btnGo.setOnClickListener(PostListFragment.this);
+        btnGo.setOnClickListener(PostsFragment.this);
         return fragmentView;
     }
 
@@ -52,7 +53,7 @@ public class PostListFragment extends Fragment implements View.OnClickListener {
                 try {
                     final List<Post> posts = client.userDashboard();
                     if (getActivity() != null) {
-                        adapterFragment = new PostAdapterFragment(getActivity(), posts, onPostClickListener);
+                        adapterFragment = new PostsAdapter(getActivity(), posts, onPostClickListener);
                         getActivity().runOnUiThread(new Runnable() {  //check for null
                             @Override
                             public void run() {
@@ -87,7 +88,7 @@ public class PostListFragment extends Fragment implements View.OnClickListener {
         } else ;
     }
 
-    private final PostAdapterFragment.OnPostAdapterClickListener onPostClickListener = new PostAdapterFragment.OnPostAdapterClickListener() {
+    private final PostsAdapter.OnPostAdapterClickListener onPostClickListener = new PostsAdapter.OnPostAdapterClickListener() {
         @Override
         public void onImageClick(String imageURL) {
             ImageDialogFragment imageDialogFragment = new ImageDialogFragment();

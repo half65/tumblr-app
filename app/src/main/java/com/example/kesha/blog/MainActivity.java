@@ -11,13 +11,13 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import com.example.kesha.blog.UtilsPackage.PreferencesStorage;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.PreferencesStorage;
+import com.example.kesha.blog.utils.Utils;
 import com.example.kesha.blog.fragments.FollowersFragment;
 import com.example.kesha.blog.fragments.FollowingFragment;
 import com.example.kesha.blog.fragments.FragmentSearch;
 import com.example.kesha.blog.fragments.InfoFragment;
-import com.example.kesha.blog.fragments.PostListFragment;
+import com.example.kesha.blog.fragments.PostsFragment;
 
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -54,8 +54,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         setContentView(R.layout.activity_main);
         mSwipeRefresh = findViewById(R.id.container);
         mSwipeRefresh.setOnRefreshListener(this);
-        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue,R.color.deep_blue);
-        if(Utils.hasConnection(MainActivity.this)){
+        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
+        if (Utils.hasConnection(MainActivity.this)) {
             ViewPager viewPager = findViewById(R.id.viewpager);
             setupViewPager(viewPager);
 
@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             TabLayout tabLayout = findViewById(R.id.sliding_tabs);
             tabLayout.setupWithViewPager(viewPager);
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
-                    tabLayout.getTabAt(i).setIcon(tabIcons[i]);
+                tabLayout.getTabAt(i).setIcon(tabIcons[i]);
             }
-        }else {
-            Toast.makeText(MainActivity.this,getString(R.string.textErrNoInternet),Toast.LENGTH_LONG).show();
-            Intent intent = new Intent(MainActivity.this,StartActivity.class);
+        } else {
+            Toast.makeText(MainActivity.this, getString(R.string.textErrNoInternet), Toast.LENGTH_LONG).show();
+            Intent intent = new Intent(MainActivity.this, StartActivity.class);
             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
                     | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
@@ -79,7 +79,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new PostListFragment(), "posts");
+        adapter.addFragment(new PostsFragment(), "posts");
         adapter.addFragment(new InfoFragment(), "info");
         adapter.addFragment(new FollowingFragment(), "following");
         adapter.addFragment(new FollowersFragment(), "followers");
@@ -97,8 +97,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
-            @Override public void run() {
-                mSwipeRefresh.setRefreshing(false)
-                ;}}, 5000);
+            @Override
+            public void run() {
+                mSwipeRefresh.setRefreshing(false);
+            }
+        }, 5000);
     }
 }

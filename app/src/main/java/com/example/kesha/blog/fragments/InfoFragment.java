@@ -18,9 +18,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.example.kesha.blog.UtilsPackage.GlideApp;
+import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.UtilsPackage.Utils;
+import com.example.kesha.blog.utils.Utils;
+import com.example.kesha.blog.adapters.InfoAdapter;
 import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.User;
