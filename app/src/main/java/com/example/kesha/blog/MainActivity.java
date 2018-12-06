@@ -1,14 +1,18 @@
 package com.example.kesha.blog;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import com.example.kesha.blog.utils.PreferencesStorage;
@@ -25,17 +29,38 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private SwipeRefreshLayout mSwipeRefresh;
+    private AlertDialog.Builder ad;
+
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update) {
-
-            PreferencesStorage.removeData();
-            startActivity(new Intent(MainActivity.this, StartActivity.class));
-            finish();
+            String title = "Смена профиля";
+            String message = "Вы уверены?";
+            ad = new AlertDialog.Builder(this);
+            ad.setTitle(title);
+            ad.setMessage(message);
+            ad.setPositiveButton("Да",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                            PreferencesStorage.removeData();
+                            startActivity(new Intent(MainActivity.this, StartActivity.class));
+                            finish();
+                        }
+                    });
+            ad.setNegativeButton("Нет",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
+                    });
+            ad.setCancelable(true);
+            ad.show();
         }
         return super.onOptionsItemSelected(item);
     }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -78,7 +103,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
     }
-
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
