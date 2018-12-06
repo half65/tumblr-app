@@ -1,10 +1,10 @@
 package com.example.kesha.blog.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -18,17 +18,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
-import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.utils.Utils;
 import com.example.kesha.blog.adapters.InfoAdapter;
+import com.example.kesha.blog.utils.GlideApp;
+import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.User;
 
 import java.util.List;
 
-public class InfoFragment extends Fragment {
+public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = InfoFragment.class.getSimpleName();
     private RecyclerView informationRecycler;
     private ImageView avatarImageView;
@@ -38,16 +38,19 @@ public class InfoFragment extends Fragment {
     private TextView postsTextView;
     private TextView followersTextView;
     private TextView followingTextView;
-    private Activity activity;
+    private SwipeRefreshLayout mSwipeRefresh;
+
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.info_fragment, container, false);
+        mSwipeRefresh = fragmentView.findViewById(R.id.containerInfo);
+        mSwipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         relativeLayout = fragmentView.findViewById(R.id.info_relative_layout);
         informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
         relativeLayout.setVisibility(View.GONE);
-        activity = getActivity();
         progressBar = fragmentView.findViewById(R.id.progressBar_info_fragment);
         progressBar.setVisibility(View.VISIBLE);
         progressBar.setIndeterminate(true);
@@ -58,6 +61,7 @@ public class InfoFragment extends Fragment {
         followingTextView = fragmentView.findViewById(R.id.followingTextView);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         informationRecycler.setLayoutManager(manager);
+
         return fragmentView;
     }
 
@@ -93,6 +97,7 @@ public class InfoFragment extends Fragment {
 
             InfoAdapter infoAdapter = new InfoAdapter(getActivity(), postLike, onImageClickListener);
             informationRecycler.setAdapter(infoAdapter);
+            mSwipeRefresh.setRefreshing(false);
         }
     }
 
@@ -142,11 +147,17 @@ public class InfoFragment extends Fragment {
                         @Override
                         public void run() {
                             Toast.makeText(getActivity(), reason, Toast.LENGTH_LONG).show();
+                            mSwipeRefresh.setRefreshing(false);
                         }
                     });
 
                 }
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        getInfo();
     }
 }

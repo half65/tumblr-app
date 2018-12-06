@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -24,12 +25,13 @@ import com.tumblr.jumblr.types.Post;
 
 import java.util.List;
 
-public class FragmentSearch extends Fragment {
+public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private EditText fieldSearch;
     private Button startSearchBtn;
     private ProgressBar progressBarSearch;
+    private SwipeRefreshLayout mSwipeRefresh;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -42,6 +44,9 @@ public class FragmentSearch extends Fragment {
         startSearchBtn = fragmentView.findViewById(R.id.start_search_batton);
         progressBarSearch = fragmentView.findViewById(R.id.progress_bar_search);
         progressBarSearch.setVisibility(View.GONE);
+        mSwipeRefresh = fragmentView.findViewById(R.id.containerSearch);
+        mSwipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         return fragmentView;
     }
 
@@ -74,6 +79,7 @@ public class FragmentSearch extends Fragment {
                             recyclerView.setAdapter(infoAdapter);
                             progressBarSearch.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
+                            mSwipeRefresh.setRefreshing(false);
                         }
                     }
                 }
@@ -112,4 +118,19 @@ public class FragmentSearch extends Fragment {
             }
         }
     };
+
+    @Override
+    public void onRefresh() {
+        if(recyclerView.getAdapter()!=null){
+            if (!TextUtils.isEmpty(fieldSearch.getText())) {
+                progressBarSearch.setVisibility(View.VISIBLE);
+                progressBarSearch.setIndeterminate(true);
+                getResponseSearch(fieldSearch.getText().toString());
+            }else {
+                mSwipeRefresh.setRefreshing(false);
+            }
+        }else {
+            mSwipeRefresh.setRefreshing(false);
+        }
+    }
 }

@@ -25,7 +25,7 @@ import com.example.kesha.blog.fragments.PostsFragment;
 
 import org.apache.http.HttpConnection;
 
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private SwipeRefreshLayout mSwipeRefresh;
@@ -80,9 +80,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        mSwipeRefresh = findViewById(R.id.container);
-        mSwipeRefresh.setOnRefreshListener(this);
-        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         if (Utils.hasConnection(MainActivity.this)) {
             ViewPager viewPager = findViewById(R.id.viewpager);
             setupViewPager(viewPager);
@@ -119,15 +116,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     protected void onDestroy() {
         super.onDestroy();
 
-    }
-
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mSwipeRefresh.setRefreshing(false);
-            }
-        }, 5000);
     }
 }

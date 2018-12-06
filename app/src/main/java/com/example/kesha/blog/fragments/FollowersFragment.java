@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -22,10 +23,11 @@ import com.tumblr.jumblr.types.User;
 
 import java.util.List;
 
-public class FollowersFragment extends Fragment {
+public class FollowersFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = FollowersFragment.class.getSimpleName();
     private RecyclerView recyclerView;
     private ProgressBar progressBar;
+    private SwipeRefreshLayout mSwipeRefresh;
 
 
     @Override
@@ -38,6 +40,9 @@ public class FollowersFragment extends Fragment {
         progressBar.setIndeterminate(true);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         recyclerView.setLayoutManager(manager);
+        mSwipeRefresh = fragmentView.findViewById(R.id.containerFollowers);
+        mSwipeRefresh.setOnRefreshListener(this);
+        mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         if (getContext() != null) {
             DividerItemDecoration myDivider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
             myDivider.setDrawable(ContextCompat.getDrawable(getContext(), R.drawable.item_decoration));
@@ -66,6 +71,7 @@ public class FollowersFragment extends Fragment {
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
                             progressBar.setIndeterminate(false);
+                            mSwipeRefresh.setRefreshing(false);
                         }
                     });
 
@@ -79,10 +85,16 @@ public class FollowersFragment extends Fragment {
                         @Override
                         public void run() {
                             Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
+                            mSwipeRefresh.setRefreshing(false);
                         }
                     });
             }
         });
+    }
+
+    @Override
+    public void onRefresh() {
+        setFollowersAdapter();
     }
 }
 
