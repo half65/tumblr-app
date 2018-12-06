@@ -22,7 +22,6 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="10"
                 android:ems="10"
-                android:focusable="?android:attr/windowOverscan"
                 android:hint="введите название блога"
                 android:inputType="textPersonName" />
 

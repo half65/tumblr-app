@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="65dp">
 
     <ImageView
         android:id="@+id/avatar_followers_imgView"
@@ -10,12 +11,10 @@
         android:layout_height="@dimen/icon_size_middle"
         android:layout_marginStart="8dp"
         android:layout_marginLeft="8dp"
-        android:layout_centerVertical="true"
         android:layout_marginTop="8dp"
-        android:layout_marginBottom="8dp"
+        android:layout_marginBottom="7dp"
         android:contentDescription="@string/avatar_follower_descr"
-        tools:srcCompat="@tools:sample/avatars"
-        tools:ignore="RtlHardcoded" />
+        tools:srcCompat="@tools:sample/avatars"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -24,14 +23,17 @@
         android:layout_toEndOf="@+id/avatar_followers_imgView"
         android:layout_marginStart="15dp"
         android:layout_marginLeft="15dp"
-        android:orientation="vertical"
-        tools:ignore="RtlHardcoded">
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/name_followers_txtview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        android:layout_marginStart="15dp"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="8dp"
+        android:textAppearance="@style/TextAppearance.Design.Snackbar.Message"
+        app:layout_constraintStart_toEndOf="@+id/avatar_followers_imgView"
+        app:layout_constraintTop_toTopOf="parent" />
     </LinearLayout>
-</RelativeLayout>
+</android.support.constraint.ConstraintLayout>
