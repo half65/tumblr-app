@@ -1,7 +1,6 @@
 package com.example.kesha.blog.fragments;
 
 import android.app.Dialog;
-import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -13,13 +12,10 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.target.BitmapImageViewTarget;
-import com.bumptech.glide.request.target.CustomViewTarget;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.UtilsPackage.GlideApp;
-import com.tumblr.jumblr.types.PhotoPost;
 
 public class ImageDialogFragment extends DialogFragment {
     private ImageView imageView;

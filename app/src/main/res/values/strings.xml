@@ -17,5 +17,7 @@
     <string name="post_image">post_image</string>
     <string name="bottomTextStartActivity">Данное приложение не является официальным и используется только в целях изучения программирования.</string>
     <string name="blog_avatar">blog_avatar</string>
+    <string name="textFormatUpdateLikedPost">Опубликованно dd MMM в HH:mm</string>
+    <string name="textErrNoInternet">Доступ к сети интернет отсутствует. Проверьте подключение или обратитесь к своему оператору, который предоставляет доступ.</string>
 
 </resources>

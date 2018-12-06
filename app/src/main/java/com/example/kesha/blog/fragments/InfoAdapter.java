@@ -54,9 +54,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         return new InfoViewHolder(view);
     }
 
-    private static String getLikePostImg(final PhotoPost photoPost, final int iteration) {
-        String imageUrl = photoPost.getPhotos().get(iteration).getSizes().get(1).getUrl();
-        return imageUrl;
+    private static String getLikePostImg( PhotoPost photoPost, int iteration) {
+        return photoPost.getPhotos().get(iteration).getSizes().get(1).getUrl();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -84,7 +83,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         infoViewHolder.blogName.setText(blogName);
 
         @SuppressLint("SimpleDateFormat")
-        String newFormatDate = new SimpleDateFormat("dd MMM, HH:mm")
+        String newFormatDate = new SimpleDateFormat(activity.getString(R.string.textFormatUpdateLikedPost))
                 .format(new java.util.Date(posts.get(position).getTimestamp() * 1000));
         infoViewHolder.timePost.setText(newFormatDate);
 

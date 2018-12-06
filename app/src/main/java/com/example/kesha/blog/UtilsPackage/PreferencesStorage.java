@@ -36,4 +36,9 @@ public class PreferencesStorage {
         SharedPreferences prefs = appContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE);
         prefs.edit().putString(KEY_TOKEN_SECRET, secret).apply();
     }
+
+    public static void removeData (){
+        saveAccessToken(null);
+        saveTokenSecret(null);
+    }
 }

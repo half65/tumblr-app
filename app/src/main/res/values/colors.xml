@@ -8,4 +8,8 @@
     <color name="colorTextHintStartActivity">#c9c9c9</color>
     <color name="colorTextTag">#a8cef2</color>
     <color name="colorTabIndicator" tools:ignore="MissingDefaultResource">#ffffff</color>
+    <color name="light_blue">#AFEEEE</color>
+    <color name="middle_blue">#6495ED</color>
+    <color name="deep_blue">#0000FF</color>
+
 </resources>

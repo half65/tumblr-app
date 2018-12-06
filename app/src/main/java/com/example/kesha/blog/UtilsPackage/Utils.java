@@ -1,5 +1,8 @@
 package com.example.kesha.blog.UtilsPackage;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import com.example.kesha.blog.TumblrApplication;
@@ -105,31 +108,6 @@ public class Utils {
         }).start();
     }
 
-    /*public interface JumblrInfoLikesPhotoPostCallback {
-        void onInfoLikesLoaded(List<Post> posts, JumblrClient client);
-
-        void onLoadFailed(String reason);
-    }
-
-    public static void loadLikesPost(final PhotoPost post,final JumblrInfoLikesPhotoPostCallback callback) {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                JumblrClient client = TumblrApplication.getClient();
-                try {
-                    List<String> url;
-                    for (int i = 0; i < post.getPhotos().size(); i++) {
-                        url.add(post.getPhotos().get(i).getSizes().get(1).)
-                    }
-                    callback.onInfoLikesLoaded(posts, client);
-                } catch (Exception e) {
-                    Log.println(Log.ASSERT, TAG, "loadFollowingInfo exception: " + e.toString());
-                    callback.onLoadFailed(e.toString());
-                }
-            }
-        }).start();
-    }*/
-
     public static Post convertPost(Post post) {
         switch (post.getType()) {
             case TEXT:
@@ -151,5 +129,23 @@ public class Utils {
                 ANSWER("answer"),
                 POSTCARD("postcard"),
                 UNKNOWN("unknown");*/
+    }
+
+    public static boolean hasConnection(final Context context)
+    {
+        ConnectivityManager cm = (ConnectivityManager)context.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        wifiInfo = cm.getActiveNetworkInfo();
+        if (wifiInfo != null && wifiInfo.isConnected()) {
+            return true;
+        }
+        return false;
     }
 }
