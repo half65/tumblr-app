@@ -113,7 +113,7 @@
                 android:paddingRight="8dp">
 
                 <TextView
-                    android:id="@+id/text_body_post"
+                    android:id="@+id/text_post_body_title"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
@@ -125,7 +125,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/text_post_body_title"
+                    android:id="@+id/text_body_post"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_margin="10dp"
@@ -141,13 +141,14 @@
                     android:id="@+id/hint_text_body_post_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
+                    android:layout_marginStart="10dp"
                     android:paddingStart="4dp"
                     android:paddingTop="4dp"
                     android:text="нажмите на текст чтобы свернуть(развернуть)"
                     android:textColor="@color/colorTextTag"
                     android:textSize="12sp"
-                    android:visibility="gone" />
+                    android:visibility="gone"
+                    tools:ignore="RtlSymmetry" />
 
                 <LinearLayout
                     android:id="@+id/grid_root_post_tag_linear_layout"
@@ -175,6 +176,7 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="4dp"
                     android:orientation="horizontal">
 
                     <TextView
@@ -192,17 +194,17 @@
                         android:layout_alignParentTop="true"
                         android:layout_marginStart="90dp"
                         android:layout_marginTop="0dp"
-                        android:text="Button" />
+                        android:text="like" />
 
                     <Button
-                        android:id="@+id/button_repost"
+                        android:id="@+id/reblog_button"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
                         android:layout_marginTop="0dp"
                         android:layout_marginEnd="89dp"
-                        android:text="Button" />
+                        android:text="reblog" />
 
                     <Button
                         android:id="@+id/button_follow"
@@ -210,6 +212,8 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentTop="true"
                         android:layout_alignParentEnd="true"
+                        android:layout_marginTop="0dp"
+                        android:layout_marginEnd="0dp"
                         android:text="Button" />
                 </RelativeLayout>
 

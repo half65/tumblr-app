@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -43,6 +44,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         void onBodyTextClick(TextView textView);
 
         void onClickLike(int position,List<Post> posts);
+
+        void onClickReblog(int position,List<Post> posts);
 
     }
 
@@ -251,7 +254,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         return posts.size();
     }
 
-    class PhotoPostViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class PhotoPostViewHolder extends RecyclerView.ViewHolder {
 
         private TextView bodyText, blogName, timePost, tagText, textBodyTitle, hintTextBody;
         private ProgressBar progressBarLickedPost;
@@ -260,6 +263,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         private LinearLayout tagRootLinearLayout;
         private LinearLayout lickedPostLinear;
         private LinearLayout textPostLinear;
+        private Button likeBtn,reblogBtn;
 
 
         public PhotoPostViewHolder(@NonNull View itemView) {
@@ -276,6 +280,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             blogName = itemView.findViewById(R.id.blog_name_post_recycler_textview);
             timePost = itemView.findViewById(R.id.time_post_recycler_textview);
             blogAvatar = itemView.findViewById(R.id.avatar_post_recycler_image);
+            likeBtn = itemView.findViewById(R.id.button_like);
+            reblogBtn = itemView.findViewById(R.id.reblog_button);
 
             bodyText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -283,10 +289,25 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     onPostAdapterClickListener.onBodyTextClick(bodyText);
                 }
             });
+            likeBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPostAdapterClickListener.onClickLike(getAdapterPosition(),posts);
+                }
+            });
+
+            reblogBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onPostAdapterClickListener.onClickReblog(getAdapterPosition(),posts);
+                }
+            });
         }
 
 
-        @Override
+
+
+        /*@Override
         public void onClick(View v) {
             final Post currentPost = posts.get(getAdapterPosition());
             switch (v.getId()) {
@@ -309,7 +330,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                         Log.e("ASD", "like()");
                     }
                     break;
-                case R.id.button_repost:
+                case R.id.reblog_button:
                     new Thread() {
                         @Override
                         public void run() {
@@ -319,6 +340,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     Log.e("ASD", "reblog()");
                     break;
             }
-        }
+        }*/
     }
 }

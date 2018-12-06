@@ -10,11 +10,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.TextView;
 
+import com.example.kesha.blog.utils.Constants;
+
 public class WebViewActivity extends AppCompatActivity {
     private final String TAG = WebViewActivity.class.getSimpleName();
     public static final String ARG_AUTH_URL = "ARG_AUTH_URL";
     public static final String RES_AUTH_VERIFIER = "RES_AUTH_VERIFIER";
-
+    private WebView webView;
     private boolean isVerifierSaved = false;
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -27,7 +29,7 @@ public class WebViewActivity extends AppCompatActivity {
 
         if (intent != null) {
             String authUrl = intent.getStringExtra(ARG_AUTH_URL);
-            WebView webView = findViewById(R.id.webView);
+            webView = findViewById(R.id.webView);
             webView.getSettings().setJavaScriptEnabled(true);
             webView.getSettings().setSupportMultipleWindows(true); // This forces ChromeClient enabled.
 
@@ -54,6 +56,7 @@ public class WebViewActivity extends AppCompatActivity {
                     return false;
                 }
             });
+
             webView.loadUrl(authUrl); // specify download page
         }else {
             TextView errText = new TextView(WebViewActivity.this);
@@ -66,6 +69,7 @@ public class WebViewActivity extends AppCompatActivity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                webView.loadUrl(Constants.logOutURL);
                 Intent intent = new Intent();
                 intent.putExtra(RES_AUTH_VERIFIER, oauthVerifier);
                 setResult(RESULT_OK, intent);

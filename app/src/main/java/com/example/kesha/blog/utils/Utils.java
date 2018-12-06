@@ -124,28 +124,51 @@ public class Utils {
         }).start();
     }
 
-    public static Post convertPost(Post post) {
-        switch (post.getType()) {
-            case TEXT:
-                return (TextPost) post;
-            case PHOTO:
-                return (PhotoPost) post;
-            case VIDEO:
-                return (VideoPost) post;
-                default:return null;
-        }
+    public interface JumblrPostCallback {
+        void onPostLoaded(List<Post> posts,JumblrClient client);
 
-        /*TEXT("text"),
-                PHOTO("photo"),
-                QUOTE("quote"),
-                LINK("link"),
-                CHAT("chat"),
-                AUDIO("audio"),
-                VIDEO("video"),
-                ANSWER("answer"),
-                POSTCARD("postcard"),
-                UNKNOWN("unknown");*/
+        void onLoadFailed(String reason);
     }
+
+    public static void loadBlogPosts(final String blogName, final JumblrPostCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JumblrClient client = TumblrApplication.getClient();
+                try {
+                    final List<Post> posts = client.blogPosts(blogName);
+                    callback.onPostLoaded(posts,client);
+                } catch (Exception e) {
+                    Log.println(Log.ASSERT, TAG, "loadFollowingInfo exception: " + e.toString());
+                    callback.onLoadFailed(e.toString());
+                }
+            }
+        }).start();
+    }
+
+    public interface JumblrUserDashboardCallback {
+        void onDashboardPostsLoaded(List<Post> posts,JumblrClient client);
+
+        void onLoadFailed(String reason);
+    }
+
+    public static void loadPostsDashBoard(final JumblrUserDashboardCallback callback) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                JumblrClient client = TumblrApplication.getClient();
+                try {
+                    final List<Post> posts = client.userDashboard();
+                    callback.onDashboardPostsLoaded(posts,client);
+                } catch (Exception e) {
+                    Log.println(Log.ASSERT, TAG, "loadFollowingInfo exception: " + e.toString());
+                    callback.onLoadFailed(e.toString());
+                }
+            }
+        }).start();
+    }
+
+
 
     public static boolean hasConnection(final Context context)
     {

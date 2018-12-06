@@ -19,6 +19,8 @@ import com.example.kesha.blog.fragments.FragmentSearch;
 import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.PostsFragment;
 
+import org.apache.http.HttpConnection;
+
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -27,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.update) {
+
             PreferencesStorage.removeData();
             startActivity(new Intent(MainActivity.this, StartActivity.class));
             finish();
