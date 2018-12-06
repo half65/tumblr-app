@@ -18,8 +18,6 @@ import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
 
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.FollowersViewHolder> {
     private List<User> followers;
@@ -71,7 +69,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
 
         public FollowersViewHolder(View view) {
             super(view);
-            nameFollowerTextView = view.findViewById(R.id.name_followers_txtview);
+            nameFollowerTextView = view.findViewById(R.id.name_followers_text_view);
             avatarFollower = view.findViewById(R.id.avatar_followers_imgView);
         }
     }
