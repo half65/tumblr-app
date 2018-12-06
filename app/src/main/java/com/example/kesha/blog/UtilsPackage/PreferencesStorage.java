@@ -13,12 +13,6 @@ public class PreferencesStorage {
     private static final String KEY_TOKEN_SECRET = "KEY_TOKEN_SECRET";
     private static Context appContext;
 
-    public static void removeData (){
-        SharedPreferences.Editor prefs = appContext.getSharedPreferences(PREFS_NAME, MODE_PRIVATE).edit();
-        prefs.remove(KEY_ACCESS_TOKEN);
-        prefs.remove(KEY_TOKEN_SECRET);
-        prefs.apply();
-    }
 
     public static void setAppContext(Context context) {
         appContext = context;
