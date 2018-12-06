@@ -4,7 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.adapters.InfoAdapter;
+import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Post;
 
@@ -33,6 +36,7 @@ public class FragmentSearch extends Fragment {
                              Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.fragment_search, container, false);
         recyclerView = fragmentView.findViewById(R.id.recycler_search_fragment);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         recyclerView.setVisibility(View.GONE);
         fieldSearch = fragmentView.findViewById(R.id.fild_search_edit);
         startSearchBtn = fragmentView.findViewById(R.id.start_search_batton);
@@ -50,38 +54,40 @@ public class FragmentSearch extends Fragment {
     View.OnClickListener onClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            progressBarSearch.setVisibility(View.VISIBLE);
-            progressBarSearch.setIndeterminate(true);
-            getResponseSearch(fieldSearch.getText().toString());
+            if (!TextUtils.isEmpty(fieldSearch.getText())) {
+                progressBarSearch.setVisibility(View.VISIBLE);
+                progressBarSearch.setIndeterminate(true);
+                getResponseSearch(fieldSearch.getText().toString());
+            }
 
         }
     };
 
-    private void getResponseSearch(final String tagText){
-        final JumblrClient client = TumblrApplication.getClient();
-        List<Post> posts = client.tagged(tagText);
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                final List<Post> posts = client.tagged(tagText);
-                InfoAdapter infoAdapter = new InfoAdapter(getActivity(),posts,onSearchClickListener);
-                recyclerView.setAdapter(infoAdapter);
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if(posts.size()!=0&&getActivity()!=null){
-                            InfoAdapter infoAdapter = new InfoAdapter(getActivity(),posts,onSearchClickListener);
+    private void makeAdapter(final List<Post> posts) {
+        if (getActivity() != null) {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getActivity() != null && isAdded()) {
+                        if (posts.size() != 0 && getActivity() != null) {
+                            InfoAdapter infoAdapter = new InfoAdapter(getActivity(), posts, onSearchClickListener);
                             recyclerView.setAdapter(infoAdapter);
                             progressBarSearch.setVisibility(View.GONE);
-                            progressBarSearch.setIndeterminate(false);
                             recyclerView.setVisibility(View.VISIBLE);
                         }
                     }
-                });
+                }
+            });
+        }
+    }
+
+    private void getResponseSearch(final String tagText) {
+        Utils.loadTaggedPosts(tagText, new Utils.TaggedPostsCallback() {
+            @Override
+            public void onPostsLoaded(List<Post> posts) {
+                makeAdapter(posts);
             }
         });
-
-
     }
 
     private final InfoAdapter.OnInfoAdapterClickListener onSearchClickListener = new InfoAdapter.OnInfoAdapterClickListener() {
@@ -91,7 +97,7 @@ public class FragmentSearch extends Fragment {
             Bundle bundle = new Bundle();
             bundle.putString("imageUrl", imageURL);
             imageDialogFragment.setArguments(bundle);
-            if(getActivity()!=null) {
+            if (getActivity() != null) {
                 imageDialogFragment.show(getActivity().getSupportFragmentManager(), ImageDialogFragment.class.getSimpleName());
             }
         }
@@ -99,9 +105,9 @@ public class FragmentSearch extends Fragment {
         @Override
         public void onBodyTextClick(TextView textView) {
             int maxLines = textView.getMaxLines();
-            if(maxLines==15){
+            if (maxLines == 15) {
                 textView.setMaxLines(2000);
-            }else {
+            } else {
                 textView.setMaxLines(15);
             }
         }

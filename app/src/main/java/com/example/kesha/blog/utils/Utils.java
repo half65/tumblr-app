@@ -28,6 +28,10 @@ public class Utils {
         void onLoadFailed(String reason);
     }
 
+    public interface TaggedPostsCallback {
+        void onPostsLoaded(List<Post> posts);
+    }
+
 
     private static String blogPath(String blogName, String extPath) {
         return "https://" + HOSTNAME + "/v2" + "/blog/" + blogUrl(blogName) + extPath;
@@ -59,6 +63,18 @@ public class Utils {
                     Log.println(Log.ASSERT, TAG, "loadUserInfo exception: " + e.toString());
                     callback.onLoadFailed(e.toString());
                 }
+            }
+        }).start();
+    }
+
+
+    public static void loadTaggedPosts(final String tag, final TaggedPostsCallback callback) {
+        final JumblrClient client = TumblrApplication.getClient();
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                List<Post> posts = client.tagged(tag);
+                callback.onPostsLoaded(posts);
             }
         }).start();
     }

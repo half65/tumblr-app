@@ -29,7 +29,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
     private JumblrClient client;
     private int corner;
 
-    FollowingAdapter(Activity activity, List<Blog> blogs, JumblrClient client) {
+    public FollowingAdapter(Activity activity, List<Blog> blogs, JumblrClient client) {
         this.activity = activity;
         this.blogs = blogs;
         this.client = client;

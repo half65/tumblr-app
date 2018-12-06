@@ -39,7 +39,7 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         search = fragmentView.findViewById(R.id.editText2);
         btnGo = fragmentView.findViewById(R.id.button);
-        btnGo.setOnClickListener(PostsFragment.this);
+        btnGo.setOnClickListener(this);
         return fragmentView;
     }
 
@@ -77,12 +77,12 @@ public class PostsFragment extends Fragment implements View.OnClickListener {
                 @Override
                 public void run() {
 
-                    /*List<Post> posts = TumblrApplication.getClient().tagged(tag);
+                    List<Post> posts = TumblrApplication.getClient().tagged(tag);
                     if(posts == null){
 
                         return;
                     }
-                    adapterFragment.setPosts(posts);*/
+                    adapterFragment.setPosts(posts);
                 }
             }.start();
         } else ;

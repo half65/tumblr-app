@@ -26,7 +26,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
     private JumblrClient client;
     private int corner;
 
-    FollowersAdapter(Activity act, List<User> users, JumblrClient client) {
+    public FollowersAdapter(Activity act, List<User> users, JumblrClient client) {
         followers = users;
         this.client = client;
         layoutInflater = LayoutInflater.from(act);
