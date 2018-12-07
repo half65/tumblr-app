@@ -246,7 +246,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
                 break;
             case VIDEO:
-                VideoPost videoPost = (VideoPost) posts.get(position);
+                final VideoPost videoPost = (VideoPost) posts.get(position);
                 String textVideoPost = videoPost.getCaption();
                 if (textVideoPost != null) {
                     String textBodyVideoPost = android.text.Html.fromHtml(textVideoPost).toString();
@@ -293,7 +293,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 playImg.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onPostAdapterClickListener.onVideoClick(videoUrl);
+                        if (videoUrl == null) {
+                            String bodyVideo = videoPost.getVideos().get(0).getEmbedCode();
+                            String[] bodyV = bodyVideo.split("source src=\"");
+                            String[] bodyV2 = bodyV[1].split("\" type");
+                            onPostAdapterClickListener.onVideoClick(bodyV2[0]);
+                        } else {
+                            onPostAdapterClickListener.onVideoClick(videoUrl);
+                        }
                     }
                 });
 
