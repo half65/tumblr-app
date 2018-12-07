@@ -148,7 +148,7 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
                     imageView.setImageResource(R.drawable.ic_unlike_24dp);
                     imageView.setImageAlpha(255);
                     Log.e(TAG, "unlike()");
-                    Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
                     break;
                 case 255:
                     new Thread() {
@@ -165,7 +165,7 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
                     imageView.setImageResource(R.drawable.ic_like_24dp);
                     imageView.setImageAlpha(254);
                     Log.e(TAG, "like()");
-                    Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
                     break;
             }
         }

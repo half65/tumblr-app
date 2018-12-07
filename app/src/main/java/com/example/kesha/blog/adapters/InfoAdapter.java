@@ -9,6 +9,7 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebViewClient;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.MyWebView;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.utils.SearchClickListener;
@@ -108,7 +110,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 .into(infoViewHolder.blogAvatar);
         infoViewHolder.blogName.setText(blogName);
         String countLike = String.valueOf((int) likes);
-        if (countLike!=null) {
+        if (countLike != null) {
             infoViewHolder.likes.setText(countLike);
         }
 
@@ -276,12 +278,12 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 playImg.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        if(videoUrl==null){
+                        if (videoUrl == null) {
                             String bodyVideo = videoPost.getVideos().get(0).getEmbedCode();
                             String[] bodyV = bodyVideo.split("source src=\"");
                             String[] bodyV2 = bodyV[1].split("\" type");
                             onImageClickListener.onVideoClick(bodyV2[0]);
-                        }else {
+                        } else {
                             onImageClickListener.onVideoClick(videoUrl);
                         }
                     }
@@ -293,7 +295,42 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 break;
 
             case AUDIO:
-               AudioPost audioPost = (AudioPost) posts.get(infoViewHolder.getAdapterPosition());
+                AudioPost audioPost = (AudioPost) posts.get(infoViewHolder.getAdapterPosition());
+                String textAudioPost = audioPost.getCaption();
+                if (textAudioPost != null) {
+                    String textBodyVideoPost = android.text.Html.fromHtml(textAudioPost).toString();
+                    if (textBodyVideoPost.length() != 0) {
+                        while (textBodyVideoPost.charAt(textBodyVideoPost.length() - 1) == '\n') {
+                            textBodyVideoPost = textBodyVideoPost.substring(0, textBodyVideoPost.length() - 1);
+                        }
+                    }
+
+                    infoViewHolder.bodyText.setText(textBodyVideoPost);
+                    infoViewHolder.bodyText.setVisibility(VISIBLE);
+                    if (infoViewHolder.bodyText.getLineCount() > 15) {
+                        infoViewHolder.hintTextBody.setVisibility(VISIBLE);
+                    }
+
+                }
+                if (audioPost.getTags() != null) {
+                    for (int j = 0; j < audioPost.getTags().size(); j++) {
+                        infoViewHolder.tagText.append(String.format("#%s ", audioPost.getTags().get(j)));
+                    }
+                    infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                }
+                FrameLayout linearLayout = new FrameLayout(activity);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout
+                        .LayoutParams(LayoutParams.MATCH_PARENT,6800);
+                MyWebView myWebView = new MyWebView(activity);
+                WebViewClient webViewClient = new WebViewClient();
+                myWebView.setWebViewClient(webViewClient);
+                infoViewHolder.gridRoot.addView(myWebView,layoutParams);
+                myWebView.load(audioPost.getAudioUrl());
+
+
+                infoViewHolder.progressBarLickedPost.setIndeterminate(false);
+                infoViewHolder.progressBarLickedPost.setVisibility(GONE);
+                infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 Log.e(TAG, "music");
         }
 
