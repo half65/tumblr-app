@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,6 +20,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.utils.Utils;
+import com.tumblr.jumblr.types.AudioPost;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
@@ -30,6 +32,7 @@ import java.util.List;
 import static android.view.ViewGroup.*;
 
 public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder> {
+    public static String TAG = InfoAdapter.class.getSimpleName();
     private List<Post> posts;
     private LayoutInflater inflater;
     private Activity activity;
@@ -225,7 +228,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
                 break;
             case VIDEO:
-                VideoPost videoPost = (VideoPost) posts.get(position);
+                final VideoPost videoPost = (VideoPost) posts.get(position);
                 String textVideoPost = videoPost.getCaption();
                 if (textVideoPost != null) {
                     String textBodyVideoPost = android.text.Html.fromHtml(textVideoPost).toString();
@@ -272,7 +275,14 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 playImg.setOnClickListener(new OnClickListener() {
                     @Override
                     public void onClick(View v) {
-                        onImageClickListener.onVideoClick(videoUrl);
+                        if(videoUrl==null){
+                            String bodyVideo = videoPost.getVideos().get(0).getEmbedCode();
+                            String[] bodyV = bodyVideo.split("source src=\"");
+                            String[] bodyV2 = bodyV[1].split("\" type");
+                            onImageClickListener.onVideoClick(bodyV2[0]);
+                        }else {
+                            onImageClickListener.onVideoClick(videoUrl);
+                        }
                     }
                 });
 
@@ -280,6 +290,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 infoViewHolder.progressBarLickedPost.setVisibility(GONE);
                 infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 break;
+
+            case AUDIO:
+               AudioPost audioPost = (AudioPost) posts.get(infoViewHolder.getAdapterPosition());
+                Log.e(TAG, "music");
         }
 
     }
