@@ -1,5 +1,7 @@
 package com.example.kesha.blog.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.NonNull;
@@ -203,6 +205,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     imageView.setImageAlpha(254);
                     Log.e(TAG, "like()");
                     Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
+                    break;
             }
 
         }
@@ -219,6 +222,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
             }).start();
             Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
 
+        }
+
+        @Override
+        public void onVideoClick(String videoUrl) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)));
         }
     };
 

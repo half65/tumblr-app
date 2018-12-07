@@ -1,5 +1,7 @@
 package com.example.kesha.blog.fragments;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -8,6 +10,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,9 +22,11 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
+import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.adapters.InfoAdapter;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.utils.Utils;
+import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.User;
@@ -121,6 +126,63 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             }else {
                 textView.setMaxLines(15);
             }
+        }
+
+        @Override
+        public void onVideoClick(String videoUrl) {
+            startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(videoUrl)));
+        }
+
+        @Override
+        public void onClickLike(final int position,final List<Post> posts, ImageView imageView, Boolean isLike) {
+            switch (imageView.getImageAlpha()){
+                case 254:
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                posts.get(position).unlike();
+                            }catch (Exception e){
+                                Log.e(TAG,e.toString());
+                            }
+                        }
+                    }.start();
+                    imageView.setImageResource(R.drawable.ic_unlike_24dp);
+                    imageView.setImageAlpha(255);
+                    Log.e(TAG, "unlike()");
+                    Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                    break;
+                case 255:
+                    new Thread() {
+                        @Override
+                        public void run() {
+                            try {
+                                posts.get(position).like();
+                            }catch (Exception e){
+                                Log.e(TAG,e.toString());
+                            }
+
+                        }
+                    }.start();
+                    imageView.setImageResource(R.drawable.ic_like_24dp);
+                    imageView.setImageAlpha(254);
+                    Log.e(TAG, "like()");
+                    Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
+                    break;
+            }
+        }
+
+        @Override
+        public void onClickReblog(final int position,final List<Post> posts) {
+            final JumblrClient client = TumblrApplication.getClient();
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    client.postReblog(client.user().getBlogs().get(0).getName()
+                            , posts.get(position).getId(), posts.get(position).getReblogKey());
+                }
+            }).start();
+            Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
         }
     };
 

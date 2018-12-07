@@ -7,5 +7,6 @@
     <dimen name="icon_size_image_like">25dp</dimen>
     <dimen name="icon_size_reblog">25dp</dimen>
     <dimen name="font_size_username">24sp</dimen>
+    <dimen name="icon_size_play_yotube">50sp</dimen>
 
 </resources>

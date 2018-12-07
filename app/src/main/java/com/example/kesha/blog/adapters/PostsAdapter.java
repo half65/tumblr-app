@@ -6,10 +6,12 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -24,6 +26,7 @@ import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
+import com.tumblr.jumblr.types.VideoPost;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -46,6 +49,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         void onClickLike(int position,List<Post> posts, ImageView imageView, Boolean isLike);
 
         void onClickReblog(int position,List<Post> posts);
+
+        void onVideoClick(String videoUrl);
 
     }
 
@@ -81,6 +86,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
     public PhotoPostViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         View view = inflater.inflate(R.layout.item_post_fragment_recycler, viewGroup, false);
         return new PhotoPostViewHolder(view);
+    }
+
+    private String getLikeVideo(VideoPost videoPost){
+        return videoPost.getThumbnailUrl();
     }
 
     @SuppressLint("ResourceAsColor")
@@ -236,6 +245,62 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 }
 
                 break;
+            case VIDEO:
+                VideoPost videoPost = (VideoPost) posts.get(position);
+                String textVideoPost = videoPost.getCaption();
+                if (textVideoPost != null) {
+                    String textBodyVideoPost = android.text.Html.fromHtml(textVideoPost).toString();
+                    if (textBodyVideoPost.length() != 0) {
+                        while (textBodyVideoPost.charAt(textBodyVideoPost.length() - 1) == '\n') {
+                            textBodyVideoPost = textBodyVideoPost.substring(0, textBodyVideoPost.length() - 1);
+                        }
+                    }
+
+                    viewHolder.bodyText.setText(textBodyVideoPost);
+                    viewHolder.bodyText.setVisibility(VISIBLE);
+                    if(viewHolder.bodyText.getLineCount()>15){
+                        viewHolder.hintTextBody.setVisibility(VISIBLE);
+                    }
+
+                }
+                if (videoPost.getTags() != null) {
+                    for (int j = 0; j < videoPost.getTags().size(); j++) {
+                        viewHolder.tagText.append(String.format("#%s ", videoPost.getTags().get(j)));
+                    }
+                    viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                }
+                FrameLayout frameLayout = new FrameLayout(activity);
+                FrameLayout.LayoutParams rowItemParams = new FrameLayout
+                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                rowItemParams.gravity = Gravity.CENTER;
+                ImageView imageView = new ImageView(activity);
+
+                String imageUrlVideo = getLikeVideo(((VideoPost) posts.get(position)));
+                final String videoUrl = ((VideoPost) posts.get(position)).getPermalinkUrl();
+                GlideApp.with(activity)
+                        .load(imageUrlVideo)
+                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .into(imageView);
+                FrameLayout.LayoutParams rowPlayParams = new FrameLayout
+                        .LayoutParams(100,100);
+                rowPlayParams.gravity = Gravity.CENTER;
+                ImageView playImg = new ImageView(activity);
+                playImg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+                playImg.setImageResource(R.drawable.play_active);
+                frameLayout.addView(imageView,rowItemParams);
+                frameLayout.addView(playImg,rowPlayParams);
+                viewHolder.gridRoot.addView(frameLayout);
+                playImg.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        onPostAdapterClickListener.onVideoClick(videoUrl);
+                    }
+                });
+
+                viewHolder.progressBarLickedPost.setIndeterminate(false);
+                viewHolder.progressBarLickedPost.setVisibility(GONE);
+                viewHolder.lickedPostLinear.setVisibility(VISIBLE);
+                break;
         }
     }
 
@@ -315,43 +380,5 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 }
             });
         }
-
-
-
-
-        /*@Override
-        public void onClick(View v) {
-            final Post currentPost = posts.get(getAdapterPosition());
-            switch (v.getId()) {
-                case R.id.button_like:
-                    if (currentPost.isLiked()) {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                currentPost.unlike();
-                            }
-                        };
-                        Log.e("ASD", "unlike()");
-                    } else {
-                        new Thread() {
-                            @Override
-                            public void run() {
-                                currentPost.like();
-                            }
-                        };
-                        Log.e("ASD", "like()");
-                    }
-                    break;
-                case R.id.reblog_button:
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            currentPost.reblog(TumblrApplication.getClient().user().getName());
-                        }
-                    };
-                    Log.e("ASD", "reblog()");
-                    break;
-            }
-        }*/
     }
 }
