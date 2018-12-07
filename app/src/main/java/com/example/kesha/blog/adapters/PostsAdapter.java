@@ -43,7 +43,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
         void onBodyTextClick(TextView textView);
 
-        void onClickLike(int position,List<Post> posts);
+        void onClickLike(int position,List<Post> posts, ImageView imageView, Boolean isLike);
 
         void onClickReblog(int position,List<Post> posts);
 
@@ -86,6 +86,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull PhotoPostViewHolder viewHolder, int i) {
+        viewHolder.likeBtn.setImageResource(0);
         viewHolder.lickedPostLinear.setVisibility(GONE);
         viewHolder.progressBarLickedPost.setIndeterminate(true);
         viewHolder.progressBarLickedPost.setVisibility(VISIBLE);
@@ -95,10 +96,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         viewHolder.blogAvatar.setImageResource(0);
         viewHolder.blogName.setText(null);
         viewHolder.gridRoot.removeAllViews();
+        if(posts.get(viewHolder.getAdapterPosition()).isLiked()){
+            viewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
+            viewHolder.likeBtn.setImageAlpha(254);
+        }else {
+            viewHolder.likeBtn.setImageResource(R.drawable.ic_unlike_24dp);
+            viewHolder.likeBtn.setImageAlpha(255);
+        }
 
         final int position = viewHolder.getAdapterPosition();
 
         String blogName = posts.get(position).getBlogName();
+        long likes = posts.get(position).getNoteCount();
         String avatarUrl = Utils.getAvatarUrl(blogName, 256);
         GlideApp.with(activity)
                 .load(avatarUrl)
@@ -106,6 +115,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 .transform(new RoundedCorners(10))
                 .into(viewHolder.blogAvatar);
         viewHolder.blogName.setText(blogName);
+        String countLike = String.valueOf((int) likes);
+        viewHolder.likes.setText(countLike);
 
         @SuppressLint("SimpleDateFormat")
         String newFormatDate = new SimpleDateFormat("dd MMM, HH:mm")
@@ -256,14 +267,14 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
     class PhotoPostViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView bodyText, blogName, timePost, tagText, textBodyTitle, hintTextBody;
+        private TextView bodyText, blogName, timePost, tagText, textBodyTitle, hintTextBody, likes;
         private ProgressBar progressBarLickedPost;
         private LinearLayout gridRoot;
-        private ImageView blogAvatar;
+        private ImageView blogAvatar, likeBtn, reblogBtn;
         private LinearLayout tagRootLinearLayout;
         private LinearLayout lickedPostLinear;
         private LinearLayout textPostLinear;
-        private Button likeBtn,reblogBtn;
+        private boolean isLike;
 
 
         public PhotoPostViewHolder(@NonNull View itemView) {
@@ -282,6 +293,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             blogAvatar = itemView.findViewById(R.id.avatar_post_recycler_image);
             likeBtn = itemView.findViewById(R.id.button_like);
             reblogBtn = itemView.findViewById(R.id.reblog_button);
+            likes = itemView.findViewById(R.id.likes);
 
             bodyText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -292,7 +304,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             likeBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onPostAdapterClickListener.onClickLike(getAdapterPosition(),posts);
+                    onPostAdapterClickListener.onClickLike(getAdapterPosition(),posts, likeBtn,isLike);
                 }
             });
 

@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -167,29 +168,43 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
 
         @Override
-        public void onClickLike(final int position,final List<Post> posts) {
-                if(posts.get(position).isLiked()){
+        public void onClickLike(final int position, final List<Post> posts, final ImageView imageView, Boolean isLike) {
 
+            switch (imageView.getImageAlpha()){
+                case 254:
                     new Thread() {
                         @Override
                         public void run() {
-                            posts.get(position).unlike();
-
+                            try {
+                                posts.get(position).unlike();
+                            }catch (Exception e){
+                                Log.e(TAG,e.toString());
+                            }
                         }
                     }.start();
+                    imageView.setImageResource(R.drawable.ic_unlike_24dp);
+                    imageView.setImageAlpha(255);
                     Log.e(TAG, "unlike()");
-
-                }else {
-
+                    Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                    break;
+                case 255:
                     new Thread() {
                         @Override
                         public void run() {
-                            posts.get(position).like();
+                            try {
+                                posts.get(position).like();
+                            }catch (Exception e){
+                                Log.e(TAG,e.toString());
+                            }
+
                         }
                     }.start();
+                    imageView.setImageResource(R.drawable.ic_like_24dp);
+                    imageView.setImageAlpha(254);
                     Log.e(TAG, "like()");
+                    Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
+            }
 
-                }
         }
 
         @Override
@@ -202,6 +217,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             , posts.get(position).getId(), posts.get(position).getReblogKey());
                 }
             }).start();
+            Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
 
         }
     };

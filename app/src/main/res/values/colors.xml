@@ -10,6 +10,6 @@
     <color name="colorTabIndicator" tools:ignore="MissingDefaultResource">#ffffff</color>
     <color name="light_blue">#AFEEEE</color>
     <color name="middle_blue">#6495ED</color>
-    <color name="deep_blue">#0000FF</color>
+    <color name="deep_blue">#6262d6</color>
 
 </resources>
