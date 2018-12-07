@@ -9,11 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.MainActivity;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
+import com.example.kesha.blog.utils.SearchClickListener;
+import com.example.kesha.blog.utils.SearchInterface;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Blog;
@@ -48,12 +52,12 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
     @Override
     public void onBindViewHolder(@NonNull final FollowingViewHolder followingViewHolder, int i) {
         followingViewHolder.avatarFollowing.setImageResource(R.drawable.text_tumblr_com);
-        String avatarUrl = Utils.getAvatarUrl(blogs.get(followingViewHolder.getAdapterPosition()).getName(),256);
-                        GlideApp.with(activity)
-                                .load(avatarUrl)
-                                .transform(new RoundedCorners(corner))
-                                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                                .into(followingViewHolder.avatarFollowing);
+        String avatarUrl = Utils.getAvatarUrl(blogs.get(followingViewHolder.getAdapterPosition()).getName(), 256);
+        GlideApp.with(activity)
+                .load(avatarUrl)
+                .transform(new RoundedCorners(corner))
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .into(followingViewHolder.avatarFollowing);
 
         followingViewHolder.nameFollowingTextView.setText(blogs.get(followingViewHolder.getAdapterPosition()).getName());
         followingViewHolder.dateUpdated.setText(dateConvertFromUNIX(blogs.get(followingViewHolder.getAdapterPosition()).getUpdated()));
@@ -86,7 +90,9 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
             super(view);
             dateUpdated = view.findViewById(R.id.date_update_text_view);
             nameFollowingTextView = view.findViewById(R.id.name_following_text_view);
+            nameFollowingTextView.setOnClickListener(new SearchClickListener(activity));///////////////////////////////////////
             avatarFollowing = view.findViewById(R.id.avatar_following_imgView);
         }
     }
 }
+

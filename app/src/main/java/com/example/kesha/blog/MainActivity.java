@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     private static final String TAG = MainActivity.class.getSimpleName();
     private SwipeRefreshLayout mSwipeRefresh;
     private AlertDialog.Builder ad;
+    private ViewPagerAdapter adapter;
+    private TabLayout tabLayout;
 
 
     @Override
@@ -84,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
             ViewPager viewPager = findViewById(R.id.viewpager);
             setupViewPager(viewPager);
 
-
-            TabLayout tabLayout = findViewById(R.id.sliding_tabs);
+            tabLayout = findViewById(R.id.sliding_tabs);
             tabLayout.setupWithViewPager(viewPager);
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 tabLayout.getTabAt(i).setIcon(tabIcons[i]);
@@ -102,7 +104,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+
         adapter.addFragment(new PostsFragment(), "posts");
         adapter.addFragment(new InfoFragment(), "info");
         adapter.addFragment(new FollowingFragment(), "following");
@@ -116,5 +119,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onDestroy() {
         super.onDestroy();
 
+    }
+
+    public Fragment getFragment(int position){////для запроса
+        tabLayout.getTabAt(0).select();
+        return adapter.getItem(position);
     }
 }

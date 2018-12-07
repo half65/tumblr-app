@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.GlideApp;
+import com.example.kesha.blog.utils.SearchClickListener;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.AudioPost;
 import com.tumblr.jumblr.types.PhotoPost;
@@ -351,6 +352,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
             bodyText = view.findViewById(R.id.text_body);
             gridRoot = view.findViewById(R.id.grid_root_layout);
             blogName = view.findViewById(R.id.blog_name_info_recycler_textview);
+            blogName.setOnClickListener(new SearchClickListener(activity));///////////////////////////////////////
             timePost = view.findViewById(R.id.time_info_recycler_textview);
             blogAvatar = view.findViewById(R.id.avatar_post_info_recycler_test_image);
             likes = itemView.findViewById(R.id.likes_info);

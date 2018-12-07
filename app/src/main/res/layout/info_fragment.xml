@@ -10,6 +10,18 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
+        <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
+            <!--android:id="@+id/scroll"-->
+            <!--android:scrollbars="none"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content">-->
+
+        <!--<HorizontalScrollView-->
+            <!--android:id="@+id/hscroll"-->
+            <!--android:scrollbars="none"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent">-->
+
         <RelativeLayout
             android:id="@+id/info_relative_layout"
             android:layout_width="wrap_content"
@@ -28,6 +40,7 @@
                 android:contentDescription="@string/me_avatar"
                 tools:ignore="RtlHardcoded,UnusedAttribute"
                 tools:src="@tools:sample/avatars" />
+
 
             <TextView
                 android:id="@+id/nameTextView"
@@ -82,7 +95,7 @@
                 tools:ignore="RtlHardcoded" />
 
 
-            <android.support.v7.widget.RecyclerView
+        <android.support.v7.widget.RecyclerView
                 android:id="@+id/informationRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -90,6 +103,7 @@
                 android:layout_marginTop="20dp"
                 android:background="@color/colorTextHintStartActivity"
                 android:padding="8dp" />
+
         </RelativeLayout>
 
         <ProgressBar
@@ -100,8 +114,8 @@
             android:layout_gravity="center"
             android:visibility="gone" />
 
+        <!--</HorizontalScrollView>-->
+        <!--</ScrollView>-->
     </FrameLayout>
-
-
 
 </android.support.v4.widget.SwipeRefreshLayout>

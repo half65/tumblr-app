@@ -13,6 +13,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.GlideApp;
+import com.example.kesha.blog.utils.SearchClickListener;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.User;
@@ -70,6 +71,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         public FollowersViewHolder(View view) {
             super(view);
             nameFollowerTextView = view.findViewById(R.id.name_followers_text_view);
+            nameFollowerTextView.setOnClickListener(new SearchClickListener(activity));///////////////////////////////////////
             avatarFollower = view.findViewById(R.id.avatar_followers_imgView);
         }
     }

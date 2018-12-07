@@ -19,5 +19,6 @@
     <string name="blog_avatar">blog_avatar</string>
     <string name="textFormatUpdateLikedPost">Опубликованно dd MMM в HH:mm</string>
     <string name="textErrNoInternet">Доступ к сети интернет отсутствует. Проверьте подключение или обратитесь к своему оператору, который предоставляет доступ.</string>
+    <string name="log_aut">Log aut</string>
 
 </resources>

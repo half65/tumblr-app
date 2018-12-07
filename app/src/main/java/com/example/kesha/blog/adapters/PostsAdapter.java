@@ -2,6 +2,7 @@ package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -22,6 +23,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
+import com.example.kesha.blog.utils.SearchClickListener;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
@@ -188,6 +190,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     for (int j = 0; j < ps.getTags().size(); j++) {
                         viewHolder.tagText.append(String.format("#%s ", ps.getTags().get(j)));
                     }
+
                     viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                 }
 
@@ -301,6 +304,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 viewHolder.progressBarLickedPost.setVisibility(GONE);
                 viewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 break;
+            case AUDIO:
         }
     }
 
@@ -354,6 +358,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             bodyText = itemView.findViewById(R.id.text_body_post);
             gridRoot = itemView.findViewById(R.id.grid_root_post_layout);
             blogName = itemView.findViewById(R.id.blog_name_post_recycler_textview);
+            blogName.setOnClickListener(new SearchClickListener(activity));///////////////////////////////////////
             timePost = itemView.findViewById(R.id.time_post_recycler_textview);
             blogAvatar = itemView.findViewById(R.id.avatar_post_recycler_image);
             likeBtn = itemView.findViewById(R.id.button_like);
