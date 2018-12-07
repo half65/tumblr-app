@@ -32,31 +32,38 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder ad;
 
 
+
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.update) {
-            String title = "Смена профиля";
-            String message = "Вы уверены?";
-            ad = new AlertDialog.Builder(this);
-            ad.setTitle(title);
-            ad.setMessage(message);
-            ad.setPositiveButton("Да",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                            PreferencesStorage.removeData();
-                            startActivity(new Intent(MainActivity.this, StartActivity.class));
-                            finish();
-                        }
-                    });
-            ad.setNegativeButton("Нет",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
-                    });
-            ad.setCancelable(true);
-            ad.show();
+        switch (item.getItemId()){
+            case R.id.update:
+                String title = "Смена профиля";
+                String message = "Вы уверены?";
+                ad = new AlertDialog.Builder(this);
+                ad.setTitle(title);
+                ad.setMessage(message);
+                ad.setPositiveButton("Да",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                                PreferencesStorage.removeData();
+                                startActivity(new Intent(MainActivity.this, StartActivity.class));
+                                finish();
+                            }
+                        });
+                ad.setNegativeButton("Нет",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+                ad.setCancelable(true);
+                ad.show();
+                break;
+            case R.id.exit:
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -65,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu, menu);
-        return super.onCreateOptionsMenu(menu);
+        return true;
     }
 
     private int[] tabIcons = {
