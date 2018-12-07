@@ -90,8 +90,6 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
             super(view);
             dateUpdated = view.findViewById(R.id.date_update_text_view);
             nameFollowingTextView = view.findViewById(R.id.name_following_text_view);
-
-
             avatarFollowing = view.findViewById(R.id.avatar_following_imgView);
         }
     }
