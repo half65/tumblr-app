@@ -134,41 +134,41 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onClickLike(final int position,final List<Post> posts, ImageView imageView, Boolean isLike) {
-            switch (imageView.getImageAlpha()){
-                case 254:
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                posts.get(position).unlike();
-                            }catch (Exception e){
-                                Log.e(TAG,e.toString());
-                            }
-                        }
-                    }.start();
-                    imageView.setImageResource(R.drawable.ic_unlike_24dp);
-                    imageView.setImageAlpha(255);
-                    Log.e(TAG, "unlike()");
-                    Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
-                    break;
-                case 255:
-                    new Thread() {
-                        @Override
-                        public void run() {
-                            try {
-                                posts.get(position).like();
-                            }catch (Exception e){
-                                Log.e(TAG,e.toString());
-                            }
+        public void onClickLike(final int position,final List<Post> posts, ImageView imageView, Boolean isLike,TextView likeCount) {
 
+            if(isLike){
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            posts.get(position).unlike();
+                        }catch (Exception e){
+                            Log.e(TAG,e.toString());
                         }
-                    }.start();
-                    imageView.setImageResource(R.drawable.ic_like_24dp);
-                    imageView.setImageAlpha(254);
-                    Log.e(TAG, "like()");
-                    Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
-                    break;
+                    }
+                }.start();
+                imageView.setImageResource(R.drawable.ic_unlike_24dp);
+                Log.e(TAG, "unlike()");
+                String likes = likeCount.getText().toString();
+                likeCount.setText(String.valueOf(Long.valueOf(likes)-1));
+                Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
+            }else {
+                new Thread() {
+                    @Override
+                    public void run() {
+                        try {
+                            posts.get(position).like();
+                        }catch (Exception e){
+                            Log.e(TAG,e.toString());
+                        }
+
+                    }
+                }.start();
+                imageView.setImageResource(R.drawable.ic_like_24dp);
+                Log.e(TAG, "like()");
+                String likes = likeCount.getText().toString();
+                likeCount.setText(String.valueOf(Long.valueOf(likes)+1));
+                Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
             }
         }
 
