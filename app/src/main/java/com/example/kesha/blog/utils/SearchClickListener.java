@@ -18,7 +18,7 @@ public class SearchClickListener implements View.OnClickListener {
     public void onClick(View v) {
         Toast.makeText(activity, "CLICK !",Toast.LENGTH_SHORT).show();
         TextView searchText = (TextView) v;
-        SearchInterface searchFragment = (SearchInterface) ((MainActivity) activity).getFragment(0);
-        searchFragment.search(searchText.getText().toString());
+        MainActivity activity = ((MainActivity) this.activity);
+        activity.search(searchText.getText().toString());
     }
 }

@@ -2,6 +2,7 @@ package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
@@ -12,11 +13,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,11 +29,13 @@ import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.SearchClickListener;
 import com.example.kesha.blog.utils.Utils;
+import com.tumblr.jumblr.types.AudioPost;
 import com.tumblr.jumblr.types.PhotoPost;
 import com.tumblr.jumblr.types.Post;
 import com.tumblr.jumblr.types.TextPost;
 import com.tumblr.jumblr.types.VideoPost;
 
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -318,6 +323,43 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 viewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 break;
             case AUDIO:
+                viewHolder.progressBarLickedPost.setVisibility(View.GONE);
+                viewHolder.gridRoot.setVisibility(View.VISIBLE);
+                AudioPost audioPost = (AudioPost) posts.get(position);
+                final String URL = audioPost.getAudioUrl();
+                RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.player, viewHolder.gridRoot, false);
+                final Button playButton = relativeLayout.findViewById(R.id.btn_play);
+                Button stopButton = relativeLayout.findViewById(R.id.btn_stop);
+                playButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        MediaPlayer player = new MediaPlayer();
+                        try {
+                            player.setDataSource(URL);
+                            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                                @Override
+                                public void onPrepared(MediaPlayer mp) {
+                                    mp.start();
+                                }
+                            });
+                            player.prepareAsync();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                });
+                stopButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+
+                    }
+                });
+
+                viewHolder.gridRoot.addView(relativeLayout);
+                viewHolder.progressBarLickedPost.setIndeterminate(false);
+                viewHolder.progressBarLickedPost.setVisibility(GONE);
+                viewHolder.lickedPostLinear.setVisibility(VISIBLE);
+                break;
         }
     }
 

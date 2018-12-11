@@ -1,19 +1,15 @@
 package com.example.kesha.blog;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.design.widget.TabLayout;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.widget.Toast;
 
 import com.example.kesha.blog.utils.PreferencesStorage;
@@ -23,8 +19,10 @@ import com.example.kesha.blog.fragments.FollowingFragment;
 import com.example.kesha.blog.fragments.FragmentSearch;
 import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.PostsFragment;
+import com.tumblr.jumblr.JumblrClient;
+import com.tumblr.jumblr.types.Post;
 
-import org.apache.http.HttpConnection;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -33,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     private AlertDialog.Builder ad;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
+    PostsFragment postsFragment;
 
 
 
@@ -123,7 +122,8 @@ public class MainActivity extends AppCompatActivity {
     private void setupViewPager(ViewPager viewPager) {
         adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
-        adapter.addFragment(new PostsFragment(), "posts");
+        postsFragment = new PostsFragment();
+        adapter.addFragment(postsFragment, "posts");
         adapter.addFragment(new InfoFragment(), "info");
         adapter.addFragment(new FollowingFragment(), "following");
         adapter.addFragment(new FollowersFragment(), "followers");
@@ -132,14 +132,32 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
     }
+    public void search(String data) {
+        Utils.loadBlogPosts(data, new Utils.JumblrPostCallback() {
 
-    public Fragment getFragment(int position){////для запроса
-        tabLayout.getTabAt(0).select();
-        return adapter.getItem(position);
+            @Override
+            public void onLoadFailed(final String reason) {
+            }
+
+            @Override
+            public void onPostLoaded(final List<Post> posts, JumblrClient client) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if(postsFragment != null){
+                            postsFragment.isDashboard = false;
+                            tabLayout.getTabAt(0).select();
+                            postsFragment.setSearchResult(posts);
+                        }
+                    }
+                });
+            }
+        });
     }
 }

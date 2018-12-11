@@ -3,7 +3,6 @@ package com.example.kesha.blog.fragments;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -21,24 +20,24 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.kesha.blog.MainActivity;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.adapters.PostsAdapter;
-import com.example.kesha.blog.utils.SearchInterface;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
-import com.tumblr.jumblr.exceptions.JumblrException;
 import com.tumblr.jumblr.types.Post;
 
 import java.util.List;
 
 
-public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener, SearchInterface {
+public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
     private final String TAG = PostsAdapter.class.getSimpleName();
     private RecyclerView recyclerView;
     private EditText fieldEnterBlogName;
     private ProgressBar postFragmentProgressBar;
     private SwipeRefreshLayout mSwipeRefresh;
+    public boolean isDashboard = true;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -63,7 +62,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        loadUserDashboard();
+        if (isDashboard) {
+            loadUserDashboard();
+        } else {
+            isDashboard = true;
+        }
     }
 
     private void loadUserDashboard() {
@@ -105,48 +108,26 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     View.OnClickListener startSearchBlogListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            searchBlogPosts();
+            if (getActivity() != null) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.search(fieldEnterBlogName.getText().toString());
+            }
         }
     };
 
-    private void searchBlogPosts(){
-//        postFragmentProgressBar.setVisibility(View.VISIBLE);
-//        postFragmentProgressBar.setIndeterminate(true);
-        String blogName = fieldEnterBlogName.getText().toString();
-        search(blogName);
-//        Utils.loadBlogPosts(blogName, new Utils.JumblrPostCallback() {
-//            @Override
-//            public void onPostLoaded(final List<Post> posts, JumblrClient client) {
-//                if (getActivity() != null) {
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            PostsAdapter postsAdapter = new PostsAdapter(getActivity(), posts, onPostClickListener);
-//                            recyclerView.setAdapter(postsAdapter);
-//                            postFragmentProgressBar.setVisibility(View.GONE);
-//                            postFragmentProgressBar.setIndeterminate(false);
-//                            recyclerView.setVisibility(View.VISIBLE);
-//                            mSwipeRefresh.setRefreshing(false);
-//                        }
-//                    });
-//
-//                }
-//            }
-//
-//            @Override
-//            public void onLoadFailed(final String reason) {
-//                if (getActivity() != null)
-//                    getActivity().runOnUiThread(new Runnable() {
-//                        @Override
-//                        public void run() {
-//                            Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
-//                            postFragmentProgressBar.setVisibility(View.GONE);
-//                            postFragmentProgressBar.setIndeterminate(false);
-//                            mSwipeRefresh.setRefreshing(false);
-//                        }
-//                    });
-//            }
-//        });
+    public void setSearchResult(List<Post> posts){
+        postFragmentProgressBar.setVisibility(View.VISIBLE);
+        postFragmentProgressBar.setIndeterminate(true);
+        if (getActivity() != null) {
+            String blogName = posts.get(0).getBlogName();
+            fieldEnterBlogName.setText(blogName);
+            PostsAdapter postsAdapter = new PostsAdapter(getActivity(), posts, onPostClickListener);
+            recyclerView.setAdapter(postsAdapter);
+            postFragmentProgressBar.setVisibility(View.GONE);
+            postFragmentProgressBar.setIndeterminate(false);
+            recyclerView.setVisibility(View.VISIBLE);
+            mSwipeRefresh.setRefreshing(false);
+        }
     }
 
     private final PostsAdapter.OnPostAdapterClickListener onPostClickListener = new PostsAdapter.OnPostAdapterClickListener() {
@@ -236,48 +217,12 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 if(fieldEnterBlogName.getText().toString().equals("")){
                     loadUserDashboard();
                 }else {
-                    searchBlogPosts();
+                    if (getActivity() != null) {
+                        MainActivity activity = (MainActivity) getActivity();
+                        activity.search(fieldEnterBlogName.getText().toString());
+                    }
                 }
 
-    }
-
-    @Override
-    public void search(String data) {
-        postFragmentProgressBar.setVisibility(View.VISIBLE);
-        postFragmentProgressBar.setIndeterminate(true);
-        Utils.loadBlogPosts(data, new Utils.JumblrPostCallback() {
-            @Override
-            public void onPostLoaded(final List<Post> posts, JumblrClient client) {
-                if (getActivity() != null) {
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            PostsAdapter postsAdapter = new PostsAdapter(getActivity(), posts, onPostClickListener);
-                            recyclerView.setAdapter(postsAdapter);
-                            postFragmentProgressBar.setVisibility(View.GONE);
-                            postFragmentProgressBar.setIndeterminate(false);
-                            recyclerView.setVisibility(View.VISIBLE);
-                            mSwipeRefresh.setRefreshing(false);
-                        }
-                    });
-
-                }
-            }
-
-            @Override
-            public void onLoadFailed(final String reason) {
-                if (getActivity() != null)
-                    getActivity().runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
-                            postFragmentProgressBar.setVisibility(View.GONE);
-                            postFragmentProgressBar.setIndeterminate(false);
-                            mSwipeRefresh.setRefreshing(false);
-                        }
-                    });
-            }
-        });
     }
 }
 

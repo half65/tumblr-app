@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.utils.SearchClickListener;
