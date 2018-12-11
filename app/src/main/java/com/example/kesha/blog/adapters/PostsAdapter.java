@@ -205,7 +205,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if (total != 1) {
+                if ((total % columns) != 1) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -213,7 +213,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                                 .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         rowItemParams.weight = 1;
                         rowItemParams.setMargins(3, 2, 3, 2);
-                        for (int k = 0; k < 2; k++) {
+                        for (int k = 0; k < columns; k++) {
                             ImageView imageView = new ImageView(activity);
                             final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)

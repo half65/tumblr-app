@@ -53,7 +53,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
         void onVideoClick(String videoUrl);
 
-        void onClickLike(int position, List<Post> posts, ImageView imageView, Boolean isLike,TextView likeCount);
+        void onClickLike(int position, List<Post> posts, ImageView imageView, Boolean isLike, TextView likeCount);
 
         void onClickReblog(int position, List<Post> posts);
     }
@@ -87,6 +87,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final InfoViewHolder infoViewHolder, int i) {
+        infoViewHolder.tagRootLinearLayout.setVisibility(GONE);
+        infoViewHolder.likeBtn.setVisibility(VISIBLE);
+        infoViewHolder.reblogBtn.setVisibility(VISIBLE);
+        infoViewHolder.textPostLinear.setVisibility(GONE);
         infoViewHolder.lickedPostLinear.setVisibility(GONE);
         infoViewHolder.progressBarLickedPost.setIndeterminate(true);
         infoViewHolder.progressBarLickedPost.setVisibility(VISIBLE);
@@ -103,7 +107,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
             infoViewHolder.likeBtn.setImageResource(R.drawable.ic_unlike_24dp);
             infoViewHolder.isLike = false;
         }
-        if(posts.get(infoViewHolder.getAdapterPosition()).getBlogName().equals(Utils.myBlogName)){
+        if (posts.get(infoViewHolder.getAdapterPosition()).getBlogName().equals(Utils.myBlogName)) {
             infoViewHolder.likeBtn.setVisibility(GONE);
             infoViewHolder.reblogBtn.setVisibility(GONE);
         }
@@ -144,15 +148,29 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 if (textPost.getTitle() != null) {
                     infoViewHolder.textBodyTitle.setText(textPost.getTitle());
                     infoViewHolder.textBodyTitle.setVisibility(VISIBLE);
+                    infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
                 String textBodyTextPost = android.text.Html.fromHtml(textPost.getBody()).toString();
-                while (textBodyTextPost.charAt(textBodyTextPost.length() - 1) == '\n') {
-                    textBodyTextPost = textBodyTextPost.substring(0, textBodyTextPost.length() - 1);
+                if (textBodyTextPost.length() != 0) {
+                    while (textBodyTextPost.charAt(textBodyTextPost.length() - 1) == '\n') {
+                        textBodyTextPost = textBodyTextPost.substring(0, textBodyTextPost.length() - 1);
+                    }
+                    if (textBodyTextPost.length() != 0) {
+                        infoViewHolder.bodyText.setText(textBodyTextPost);
+                        infoViewHolder.bodyText.setVisibility(VISIBLE);
+                        infoViewHolder.textPostLinear.setVisibility(VISIBLE);
+                    }
+                    if (infoViewHolder.bodyText.getLineCount() > 15) {
+                        infoViewHolder.hintTextBody.setVisibility(VISIBLE);
+                    }
                 }
-                infoViewHolder.bodyText.setText(textBodyTextPost);
-                infoViewHolder.bodyText.setVisibility(VISIBLE);
-                if (infoViewHolder.bodyText.getLineCount() > 15) {
-                    infoViewHolder.hintTextBody.setVisibility(VISIBLE);
+                if (textPost.getTags().size() != 0) {
+                    for (int j = 0; j < textPost.getTags().size(); j++) {
+                        infoViewHolder.tagText.append(String.format("#%s ", textPost.getTags().get(j)));
+                    }
+
+                    infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                    infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
 
                 infoViewHolder.progressBarLickedPost.setIndeterminate(false);
@@ -170,20 +188,27 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                         while (textBodyPhotoPost.charAt(textBodyPhotoPost.length() - 1) == '\n') {
                             textBodyPhotoPost = textBodyPhotoPost.substring(0, textBodyPhotoPost.length() - 1);
                         }
+
+                        if (textBodyPhotoPost.length() != 0) {
+                            infoViewHolder.bodyText.setText(textBodyPhotoPost);
+                            infoViewHolder.bodyText.setVisibility(VISIBLE);
+                            infoViewHolder.textPostLinear.setVisibility(VISIBLE);
+                        }
                     }
 
-                    infoViewHolder.bodyText.setText(textBodyPhotoPost);
-                    infoViewHolder.bodyText.setVisibility(VISIBLE);
+
                     if (infoViewHolder.bodyText.getLineCount() > 15) {
                         infoViewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
 
                 }
-                if (ps.getTags() != null) {
+                if (ps.getTags().size() != 0) {
                     for (int j = 0; j < ps.getTags().size(); j++) {
                         infoViewHolder.tagText.append(String.format("#%s ", ps.getTags().get(j)));
                     }
+
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                    infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
 
                 int total = ((PhotoPost) posts.get(position)).getPhotos().size();
@@ -253,6 +278,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
 
                     infoViewHolder.bodyText.setText(textBodyVideoPost);
                     infoViewHolder.bodyText.setVisibility(VISIBLE);
+                    infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                     if (infoViewHolder.bodyText.getLineCount() > 15) {
                         infoViewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
@@ -263,6 +289,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                         infoViewHolder.tagText.append(String.format("#%s ", videoPost.getTags().get(j)));
                     }
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                    infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
                 FrameLayout frameLayout = new FrameLayout(activity);
                 FrameLayout.LayoutParams rowItemParams = new FrameLayout
@@ -420,8 +447,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             likeBtn.startAnimation(likeZoomAnim);
-                                onImageClickListener.onClickLike(getAdapterPosition(), posts, likeBtn, isLike, likes);
-                                isLike = !isLike;
+                            onImageClickListener.onClickLike(getAdapterPosition(), posts, likeBtn, isLike, likes);
+                            isLike = !isLike;
                             break;
                         case MotionEvent.ACTION_UP:
                             likeBtn.clearAnimation();
