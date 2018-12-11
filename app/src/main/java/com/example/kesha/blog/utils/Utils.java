@@ -21,7 +21,8 @@ import java.util.Map;
 public class Utils {
     private static final String TAG = Utils.class.getSimpleName();
     private static final String HOSTNAME = "api.tumblr.com";
-    public static List<Boolean> isLike;
+    public static String myBlogName;
+
 
     public interface JumblrUserInfoCallback {
         void onUserInfoLoaded(User user, Blog userBlog, List<User> followers,List<Post> postLike);

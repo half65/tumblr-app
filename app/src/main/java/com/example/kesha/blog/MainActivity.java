@@ -91,6 +91,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         if (Utils.hasConnection(MainActivity.this)) {
+
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    Utils.myBlogName = TumblrApplication.getClient().user().getBlogs().get(0).getName();
+                }
+            }).start();
+
             ViewPager viewPager = findViewById(R.id.viewpager);
             setupViewPager(viewPager);
 
@@ -99,6 +107,8 @@ public class MainActivity extends AppCompatActivity {
             for (int i = 0; i < tabLayout.getTabCount(); i++) {
                 tabLayout.getTabAt(i).setIcon(tabIcons[i]);
             }
+
+
         } else {
             Toast.makeText(MainActivity.this, getString(R.string.textErrNoInternet), Toast.LENGTH_LONG).show();
             Intent intent = new Intent(MainActivity.this, StartActivity.class);

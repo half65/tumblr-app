@@ -2,27 +2,28 @@ package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.FrameLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
-import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.utils.SearchClickListener;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.types.PhotoPost;
@@ -37,7 +38,7 @@ import java.util.List;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
-public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostViewHolder>  {
+public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostViewHolder> {
     private LayoutInflater inflater;
     private List<Post> posts;
     private Activity activity;
@@ -48,9 +49,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
         void onBodyTextClick(TextView textView);
 
-        void onClickLike(int position,List<Post> posts, ImageView imageView, Boolean isLike);
+        void onClickLike(int position, List<Post> posts, ImageView imageView, Boolean isLike,TextView likeCount);
 
-        void onClickReblog(int position,List<Post> posts);
+        void onClickReblog(int position, List<Post> posts);
 
         void onVideoClick(String videoUrl);
 
@@ -90,7 +91,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         return new PhotoPostViewHolder(view);
     }
 
-    private String getLikeVideo(VideoPost videoPost){
+    private String getLikeVideo(VideoPost videoPost) {
         return videoPost.getThumbnailUrl();
     }
 
@@ -107,13 +108,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         viewHolder.blogAvatar.setImageResource(0);
         viewHolder.blogName.setText(null);
         viewHolder.gridRoot.removeAllViews();
-        if(posts.get(viewHolder.getAdapterPosition()).isLiked()){
+        if (posts.get(viewHolder.getAdapterPosition()).isLiked()) {
             viewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
-            viewHolder.likeBtn.setImageAlpha(254);
-        }else {
+            viewHolder.isLike = true;
+        } else {
             viewHolder.likeBtn.setImageResource(R.drawable.ic_unlike_24dp);
-            viewHolder.likeBtn.setImageAlpha(255);
+            viewHolder.isLike = false;
         }
+        if(posts.get(viewHolder.getAdapterPosition()).getBlogName().equals(Utils.myBlogName)){
+            viewHolder.likeBtn.setVisibility(GONE);
+            viewHolder.reblogBtn.setVisibility(GONE);
+        }
+
 
         final int position = viewHolder.getAdapterPosition();
 
@@ -127,7 +133,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 .into(viewHolder.blogAvatar);
         viewHolder.blogName.setText(blogName);
         String countLike = String.valueOf((int) likes);
-        viewHolder.likes.setText(countLike);
+        viewHolder.likeCount.setText(countLike);
 
         @SuppressLint("SimpleDateFormat")
         String newFormatDate = new SimpleDateFormat("dd MMM, HH:mm")
@@ -199,7 +205,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if (total != 1) {
+                if ((total % columns) != 1) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -207,7 +213,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                                 .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         rowItemParams.weight = 1;
                         rowItemParams.setMargins(3, 2, 3, 2);
-                        for (int k = 0; k < 2; k++) {
+                        for (int k = 0; k < columns; k++) {
                             ImageView imageView = new ImageView(activity);
                             final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)
@@ -261,7 +267,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
                     viewHolder.bodyText.setText(textBodyVideoPost);
                     viewHolder.bodyText.setVisibility(VISIBLE);
-                    if(viewHolder.bodyText.getLineCount()>15){
+                    if (viewHolder.bodyText.getLineCount() > 15) {
                         viewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
 
@@ -285,13 +291,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                         .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                         .into(imageView);
                 FrameLayout.LayoutParams rowPlayParams = new FrameLayout
-                        .LayoutParams(100,100);
+                        .LayoutParams(100, 100);
                 rowPlayParams.gravity = Gravity.CENTER;
                 ImageView playImg = new ImageView(activity);
                 playImg.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
                 playImg.setImageResource(R.drawable.play_active);
-                frameLayout.addView(imageView,rowItemParams);
-                frameLayout.addView(playImg,rowPlayParams);
+                frameLayout.addView(imageView, rowItemParams);
+                frameLayout.addView(playImg, rowPlayParams);
                 viewHolder.gridRoot.addView(frameLayout);
                 playImg.setOnClickListener(new View.OnClickListener() {
                     @Override
@@ -343,16 +349,19 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
     class PhotoPostViewHolder extends RecyclerView.ViewHolder {
 
-        private TextView bodyText, blogName, timePost, tagText, textBodyTitle, hintTextBody, likes;
+        private TextView bodyText, blogName, timePost, tagText, textBodyTitle, hintTextBody, likeCount;
         private ProgressBar progressBarLickedPost;
         private LinearLayout gridRoot;
-        private ImageView blogAvatar, likeBtn, reblogBtn;
+        private ImageView blogAvatar;
         private LinearLayout tagRootLinearLayout;
         private LinearLayout lickedPostLinear;
         private LinearLayout textPostLinear;
+        private ImageButton likeBtn, reblogBtn;
         private boolean isLike;
+        private Animation likeZoomAnim;
 
 
+        @SuppressLint("ClickableViewAccessibility")
         public PhotoPostViewHolder(@NonNull View itemView) {
             super(itemView);
             hintTextBody = itemView.findViewById(R.id.hint_text_body_post_text_view);
@@ -370,7 +379,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             blogAvatar = itemView.findViewById(R.id.avatar_post_recycler_image);
             likeBtn = itemView.findViewById(R.id.button_like);
             reblogBtn = itemView.findViewById(R.id.reblog_button);
-            likes = itemView.findViewById(R.id.likes);
+            likeCount = itemView.findViewById(R.id.likes);
+            reblogBtn.setBackgroundResource(R.drawable.reply_24dp);
+            likeZoomAnim = AnimationUtils.loadAnimation(activity, R.anim.anim_like);
+
 
             bodyText.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -378,17 +390,37 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     onPostAdapterClickListener.onBodyTextClick(bodyText);
                 }
             });
-            likeBtn.setOnClickListener(new View.OnClickListener() {
+            likeBtn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    onPostAdapterClickListener.onClickLike(getAdapterPosition(),posts, likeBtn,isLike);
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            likeBtn.startAnimation(likeZoomAnim);
+                            onPostAdapterClickListener.onClickLike(getAdapterPosition(), posts, likeBtn, isLike,likeCount);
+                            isLike = !isLike;
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            likeBtn.clearAnimation();
+                            break;
+                    }
+                    return false;
                 }
             });
 
-            reblogBtn.setOnClickListener(new View.OnClickListener() {
+            reblogBtn.setOnTouchListener(new View.OnTouchListener() {
                 @Override
-                public void onClick(View v) {
-                    onPostAdapterClickListener.onClickReblog(getAdapterPosition(),posts);
+                public boolean onTouch(View v, MotionEvent event) {
+                    switch (event.getAction()) {
+                        case MotionEvent.ACTION_DOWN:
+                            reblogBtn.startAnimation(likeZoomAnim);
+                            onPostAdapterClickListener.onClickReblog(getAdapterPosition(), posts);
+                            isLike = !isLike;
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            reblogBtn.clearAnimation();
+                            break;
+                    }
+                    return false;
                 }
             });
         }
