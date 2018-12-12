@@ -2,6 +2,7 @@ package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Point;
 import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -47,6 +48,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
     private LayoutInflater inflater;
     private List<Post> posts;
     private Activity activity;
+    private int screenWidth;
 
 
     public interface OnPostAdapterClickListener {
@@ -70,6 +72,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         inflater = activity.getLayoutInflater();
         this.onPostAdapterClickListener = onPostAdapterClickListener;
 
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        screenWidth = size.x;
     }
 
     public void setPosts(List<Post> posts) {
@@ -100,6 +105,37 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         return videoPost.getThumbnailUrl();
     }
 
+    private int getPostHeight(int position){
+        PhotoPost photoPost = (PhotoPost)posts.get(position);
+        int total = ((PhotoPost) posts.get(position)).getPhotos().size();
+        int columns = 2;
+        int rows = total / columns;
+        int imagePosition = 0;
+        int height = 0;
+
+        if (total /columns > 0) {
+            height+=6*rows;
+            float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    *((screenWidth-8)/2);
+            int rowHeight = 0;
+            rowHeight = rows*(int) imageHeight;
+            height += rowHeight;
+            if ((total % columns) == 1) {
+                height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                        /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                        *(screenWidth+100);
+            }
+        } else {
+            height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    *(screenWidth+100);
+        }
+
+
+        return height;
+    }
+
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull PhotoPostViewHolder viewHolder, int i) {
@@ -113,6 +149,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         viewHolder.blogAvatar.setImageResource(0);
         viewHolder.blogName.setText(null);
         viewHolder.gridRoot.removeAllViews();
+        viewHolder.gridRoot.setLayoutParams(new LinearLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
         if (posts.get(viewHolder.getAdapterPosition()).isLiked()) {
             viewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
             viewHolder.isLike = true;
@@ -152,10 +190,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     String[] body = textPost.getBody().split("img src=\"");
                     String[] body2 = body[1].split("\" data-orig-height");
                     String imageUrl = body2[0];
-
-                    LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-                    setImageLikedPost(rowItemParams, imageUrl, viewHolder.gridRoot);
+                    setImageLikedPost(imageUrl, viewHolder);
                 }
                 if (textPost.getTitle() != null) {
                     viewHolder.textBodyTitle.setText(textPost.getTitle());
@@ -173,13 +208,11 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                         viewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
                 }
-                viewHolder.progressBarLickedPost.setIndeterminate(false);
-                viewHolder.progressBarLickedPost.setVisibility(GONE);
-                viewHolder.lickedPostLinear.setVisibility(VISIBLE);
 
                 break;
 
             case PHOTO:
+
                 PhotoPost ps = (PhotoPost) posts.get(position);
                 String textPhotoPost = ps.getCaption();
                 if (textPhotoPost != null) {
@@ -205,12 +238,16 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                 }
 
+                LinearLayout.LayoutParams gridRootParams = new LinearLayout
+                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getPostHeight(position));
+                viewHolder.gridRoot.setLayoutParams(gridRootParams);
+
                 int total = ((PhotoPost) posts.get(position)).getPhotos().size();
                 int columns = 2;
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if ((total % columns) != 1) {
+                if (total /columns > 0) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -218,14 +255,15 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                                 .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         rowItemParams.weight = 1;
                         rowItemParams.setMargins(3, 2, 3, 2);
-                        for (int k = 0; k < columns; k++) {
+                        for (int k = 0; k < 2; k++) {
                             ImageView imageView = new ImageView(activity);
                             final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)
                                     .load(imageURL)
-                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(imageView);
                             imageView.setVisibility(VISIBLE);
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             rowLayout.addView(imageView, rowItemParams);
                             imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
@@ -236,26 +274,17 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                             imagePosition++;
                         }
                         viewHolder.gridRoot.addView(rowLayout);
+                        viewHolder.gridRoot.setVisibility(VISIBLE);
+                        viewHolder.progressBarLickedPost.setVisibility(GONE);
+                        viewHolder.lickedPostLinear.setVisibility(VISIBLE);
                     }
                     if ((total % columns) == 1) {
-                        LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
-                        setImageLikedPost(rowItemParams, imageUrl, viewHolder.gridRoot);
+                        setImageLikedPost(imageUrl, viewHolder);
                     }
-
-
-                    viewHolder.progressBarLickedPost.setIndeterminate(false);
-                    viewHolder.progressBarLickedPost.setVisibility(GONE);
-                    viewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 } else {
-                    LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                     String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), total - 1);
-                    setImageLikedPost(rowItemParams, imageUrl, viewHolder.gridRoot);
-                    viewHolder.progressBarLickedPost.setIndeterminate(false);
-                    viewHolder.progressBarLickedPost.setVisibility(GONE);
-                    viewHolder.lickedPostLinear.setVisibility(VISIBLE);
+                    setImageLikedPost(imageUrl, viewHolder);
                 }
 
                 break;
@@ -293,7 +322,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 final String videoUrl = ((VideoPost) posts.get(position)).getPermalinkUrl();
                 GlideApp.with(activity)
                         .load(imageUrlVideo)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
                 FrameLayout.LayoutParams rowPlayParams = new FrameLayout
                         .LayoutParams(100, 100);
@@ -363,16 +392,18 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         }
     }
 
-    private void setImageLikedPost(LinearLayout.LayoutParams rowItemParams, final String imageUrl
-            , LinearLayout gridRoot) {
+    private void setImageLikedPost(final String imageUrl
+            , PostsAdapter.PhotoPostViewHolder viewHolder) {
         LinearLayout rowLayout = new LinearLayout(activity);
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams rowItemParams = new LinearLayout
+                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rowItemParams.weight = 1;
-        rowItemParams.setMargins(3, 2, 3, 10);
+        rowItemParams.setMargins(3, 2, 3, 2);
         ImageView imageView = new ImageView(activity);
         GlideApp.with(activity)
                 .load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
         imageView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -381,7 +412,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             }
         });
         rowLayout.addView(imageView, rowItemParams);
-        gridRoot.addView(rowLayout);
+        viewHolder.gridRoot.addView(rowLayout);
+        viewHolder.progressBarLickedPost.setIndeterminate(false);
+        viewHolder.progressBarLickedPost.setVisibility(GONE);
+        viewHolder.lickedPostLinear.setVisibility(VISIBLE);
     }
 
     @Override

@@ -13,23 +13,27 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:drawable/dialog_holo_light_frame"
             android:orientation="horizontal">
 
             <EditText
                 android:id="@+id/fild_search_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="10"
+                android:layout_weight="4"
+                android:backgroundTint="@android:color/transparent"
                 android:ems="10"
-                android:hint="введите тэг для поиска"
-                android:inputType="textPersonName" />
+                android:hint="введите тэг для поиска" />
 
-            <Button
+            <ImageButton
                 android:id="@+id/start_search_batton"
+                style="@android:style/Widget.DeviceDefault.Light.ImageButton"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="45dp"
+                android:layout_gravity="center"
                 android:layout_weight="1"
-                android:text="search" />
+                android:background="@drawable/ic_search_black_24dp"
+                tools:ignore="NewApi" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView

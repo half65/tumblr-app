@@ -2,8 +2,8 @@ package com.example.kesha.blog.adapters;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.graphics.Point;
 import android.support.annotation.NonNull;
-import android.support.v4.media.MediaBrowserCompat;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Gravity;
@@ -20,7 +20,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
@@ -38,13 +37,17 @@ import com.tumblr.jumblr.types.VideoPost;
 import java.text.SimpleDateFormat;
 import java.util.List;
 
-import static android.view.ViewGroup.*;
+import static android.view.ViewGroup.GONE;
+import static android.view.ViewGroup.LayoutParams;
+import static android.view.ViewGroup.OnClickListener;
+import static android.view.ViewGroup.VISIBLE;
 
 public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder> {
     public static String TAG = InfoAdapter.class.getSimpleName();
     private List<Post> posts;
     private LayoutInflater inflater;
     private Activity activity;
+    private int screenWidth;
 
     public interface OnInfoAdapterClickListener {
         void onImageClick(String imageURL);
@@ -66,6 +69,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         this.activity = activity;
         inflater = activity.getLayoutInflater();
         onImageClickListener = listener;
+
+        Point size = new Point();
+        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        screenWidth = size.x;
     }
 
     @NonNull
@@ -84,6 +91,37 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     }
 
 
+    private int getPostHeight(int position){
+        PhotoPost photoPost = (PhotoPost)posts.get(position);
+        int total = ((PhotoPost) posts.get(position)).getPhotos().size();
+        int columns = 2;
+        int rows = total / columns;
+        int imagePosition = 0;
+        int height = 0;
+
+        if (total /columns > 0) {
+            height+=6*rows;
+            float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    *((screenWidth-8)/2);
+            int rowHeight = 0;
+            rowHeight = rows*(int) imageHeight;
+            height += rowHeight;
+            if ((total % columns) == 1) {
+                height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                        /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                        *(screenWidth+100);
+            }
+        } else {
+            height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    *(screenWidth+100);
+        }
+
+
+        return height;
+    }
+
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull final InfoViewHolder infoViewHolder, int i) {
@@ -100,6 +138,9 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         infoViewHolder.blogAvatar.setImageResource(0);
         infoViewHolder.blogName.setText(null);
         infoViewHolder.gridRoot.removeAllViews();
+        infoViewHolder.gridRoot.setLayoutParams(new LinearLayout
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+
         if (posts.get(infoViewHolder.getAdapterPosition()).isLiked()) {
             infoViewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
             infoViewHolder.isLike = true;
@@ -141,9 +182,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                     String[] body2 = body[1].split("\" data-orig-height");
                     String imageUrl = body2[0];
 
-                    LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                            .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
-                    setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
+                    setImageLikedPost(imageUrl, infoViewHolder);
                 }
                 if (textPost.getTitle() != null) {
                     infoViewHolder.textBodyTitle.setText(textPost.getTitle());
@@ -211,12 +250,16 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                     infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
 
+                LinearLayout.LayoutParams gridRootParams = new LinearLayout
+                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getPostHeight(position));
+                infoViewHolder.gridRoot.setLayoutParams(gridRootParams);
+
                 int total = ((PhotoPost) posts.get(position)).getPhotos().size();
                 int columns = 2;
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if (total != 1) {
+                if (total /columns > 0) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -229,7 +272,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                             final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)
                                     .load(imageURL)
-                                    .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                    .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(imageView);
                             imageView.setVisibility(VISIBLE);
                             rowLayout.addView(imageView, rowItemParams);
@@ -242,26 +285,17 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                             imagePosition++;
                         }
                         infoViewHolder.gridRoot.addView(rowLayout);
+                        infoViewHolder.gridRoot.setVisibility(VISIBLE);
+                        infoViewHolder.progressBarLickedPost.setVisibility(GONE);
+                        infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                     }
                     if ((total % columns) == 1) {
-                        LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                                .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                         String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
-                        setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
+                        setImageLikedPost(imageUrl, infoViewHolder);
                     }
-
-
-                    infoViewHolder.progressBarLickedPost.setIndeterminate(false);
-                    infoViewHolder.progressBarLickedPost.setVisibility(GONE);
-                    infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 } else {
-                    LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                            .LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT);
                     String imageUrl = getLikePostImg(((PhotoPost) posts.get(position)), total - 1);
-                    setImageLikedPost(rowItemParams, imageUrl, infoViewHolder.gridRoot);
-                    infoViewHolder.progressBarLickedPost.setIndeterminate(false);
-                    infoViewHolder.progressBarLickedPost.setVisibility(GONE);
-                    infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
+                    setImageLikedPost(imageUrl, infoViewHolder);
                 }
 
                 break;
@@ -301,7 +335,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 final String videoUrl = ((VideoPost) posts.get(position)).getPermalinkUrl();
                 GlideApp.with(activity)
                         .load(imageUrlVideo)
-                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)
                         .into(imageView);
                 FrameLayout.LayoutParams rowPlayParams = new FrameLayout
                         .LayoutParams(100, 100);
@@ -374,16 +408,18 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     }
 
 
-    private void setImageLikedPost(LinearLayout.LayoutParams rowItemParams, final String imageUrl
-            , LinearLayout gridRoot) {
+    private void setImageLikedPost(final String imageUrl
+            , InfoAdapter.InfoViewHolder infoViewHolder) {
         LinearLayout rowLayout = new LinearLayout(activity);
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams rowItemParams = new LinearLayout
+                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rowItemParams.weight = 1;
         rowItemParams.setMargins(3, 2, 3, 10);
         ImageView imageView = new ImageView(activity);
         GlideApp.with(activity)
                 .load(imageUrl)
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
         imageView.setOnClickListener(new OnClickListener() {
             @Override
@@ -392,7 +428,10 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
             }
         });
         rowLayout.addView(imageView, rowItemParams);
-        gridRoot.addView(rowLayout);
+        infoViewHolder.gridRoot.addView(rowLayout);
+        infoViewHolder.progressBarLickedPost.setIndeterminate(false);
+        infoViewHolder.progressBarLickedPost.setVisibility(GONE);
+        infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
     }
 
     @Override

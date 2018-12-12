@@ -15,7 +15,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,6 +40,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ProgressBar postFragmentProgressBar;
     private SwipeRefreshLayout mSwipeRefresh;
     public boolean isDashboard = true;
+    GetSearchField getSearchField;
+    LinearLayout linearLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -53,14 +57,17 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
         fieldEnterBlogName = fragmentView.findViewById(R.id.editText2);
-        Button btnGo = fragmentView.findViewById(R.id.button);
+        ImageButton btnGo = fragmentView.findViewById(R.id.button);
         btnGo.setOnClickListener(startSearchBlogListener);
         return fragmentView;
     }
 
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
         if (isDashboard) {
             loadUserDashboard();
@@ -222,7 +229,10 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                         activity.search(fieldEnterBlogName.getText().toString());
                     }
                 }
+    }
 
+    public interface GetSearchField{
+        void searchVis(LinearLayout linearLayout);
     }
 }
 

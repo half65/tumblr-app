@@ -10,6 +10,9 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import com.example.kesha.blog.utils.PreferencesStorage;
@@ -27,11 +30,11 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private SwipeRefreshLayout mSwipeRefresh;
     private AlertDialog.Builder ad;
     private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
     PostsFragment postsFragment;
+    Button button;
 
 
 
@@ -41,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         switch (item.getItemId()){
             case R.id.update:
                 String title = "Смена профиля";
-                String message = "Вы уверены?";
+                String message = "Вы уверены что хотите выйти из профиля?";
                 ad = new AlertDialog.Builder(this);
                 ad.setTitle(title);
                 ad.setMessage(message);
@@ -66,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
             case R.id.exit:
                 finish();
                 break;
+
         }
         return super.onOptionsItemSelected(item);
     }

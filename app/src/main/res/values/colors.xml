@@ -11,5 +11,7 @@
     <color name="light_blue">#AFEEEE</color>
     <color name="middle_blue">#6495ED</color>
     <color name="deep_blue">#6262d6</color>
+    <color name="color_like">#FF0000</color>
+    <color name="color_title_unlike">#23CCA9</color>
 
 </resources>
