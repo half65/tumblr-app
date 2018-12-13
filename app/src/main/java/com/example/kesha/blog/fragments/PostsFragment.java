@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -56,13 +55,11 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false));
-        fieldEnterBlogName = fragmentView.findViewById(R.id.editText2);
-        ImageButton btnGo = fragmentView.findViewById(R.id.button);
-        btnGo.setOnClickListener(startSearchBlogListener);
+        fieldEnterBlogName = fragmentView.findViewById(R.id.field_enter_blog_name);
+        ImageButton startSearchBlogPostsBtn = fragmentView.findViewById(R.id.start_search_blogs_btn);
+        startSearchBlogPostsBtn.setOnClickListener(startSearchBlogListener);
         return fragmentView;
     }
-
-
 
 
     @Override
@@ -102,7 +99,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getString(R.string.text_error_load_data) + reason, Toast.LENGTH_LONG).show();
                             postFragmentProgressBar.setVisibility(View.GONE);
                             postFragmentProgressBar.setIndeterminate(false);
                             mSwipeRefresh.setRefreshing(false);
@@ -117,16 +114,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onClick(View v) {
             if (getActivity() != null) {
                 MainActivity activity = (MainActivity) getActivity();
-                if(!TextUtils.isEmpty(fieldEnterBlogName.getText().toString()))
-                activity.search(fieldEnterBlogName.getText().toString());
+                if (!TextUtils.isEmpty(fieldEnterBlogName.getText().toString()))
+                    activity.search(fieldEnterBlogName.getText().toString());
             }
         }
     };
 
-    public void setSearchResult(List<Post> posts, String blogName){
-
-        if(posts.size()==0){
-            Toast.makeText(getActivity(),getString(R.string.error_text_no_posts),Toast.LENGTH_LONG).show();
+    public void setSearchResult(List<Post> posts, String blogName) {
+        if (posts.size() == 0) {
+            Toast.makeText(getActivity(), getString(R.string.error_text_no_posts), Toast.LENGTH_LONG).show();
             fieldEnterBlogName.setText(blogName);
             postFragmentProgressBar.setVisibility(View.GONE);
             postFragmentProgressBar.setIndeterminate(false);
@@ -168,32 +164,33 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         }
 
         @Override
-        public void onClickLike(final int position, final List<Post> posts, final ImageView imageView, Boolean isLike,TextView likeCount) {
+        public void onClickLike(final int position, final List<Post> posts, final ImageView imageView, Boolean isLike, TextView likeCount) {
 
-            if(isLike){
+            if (isLike) {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).unlike();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
                     }
                 }.start();
                 imageView.setImageResource(R.drawable.ic_unlike_24dp);
                 Log.e(TAG, "unlike()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)-1));
-                Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
-            }else {
+                likeCount.setText(String.valueOf(Long.valueOf(likes) - 1));
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_unlike), Toast.LENGTH_SHORT).show();
+            } else {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).like();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
 
                     }
@@ -201,14 +198,15 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                 imageView.setImageResource(R.drawable.ic_like_24dp);
                 Log.e(TAG, "like()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)+1));
-                Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                likeCount.setText(String.valueOf(Long.valueOf(likes) + 1));
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_like), Toast.LENGTH_SHORT).show();
             }
 
         }
 
         @Override
-        public void onClickReblog(final int position,final List<Post> posts) {
+        public void onClickReblog(final int position, final List<Post> posts) {
             final JumblrClient client = TumblrApplication.getClient();
             new Thread(new Runnable() {
                 @Override
@@ -217,7 +215,8 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
                             , posts.get(position).getId(), posts.get(position).getReblogKey());
                 }
             }).start();
-            Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_reblog), Toast.LENGTH_SHORT).show();
 
         }
 
@@ -229,17 +228,17 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
 
     @Override
     public void onRefresh() {
-                if(fieldEnterBlogName.getText().toString().equals("")){
-                    loadUserDashboard();
-                }else {
-                    if (getActivity() != null) {
-                        MainActivity activity = (MainActivity) getActivity();
-                        activity.search(fieldEnterBlogName.getText().toString());
-                    }
-                }
+        if (fieldEnterBlogName.getText().toString().equals("")) {
+            loadUserDashboard();
+        } else {
+            if (getActivity() != null) {
+                MainActivity activity = (MainActivity) getActivity();
+                activity.search(fieldEnterBlogName.getText().toString());
+            }
+        }
     }
 
-    public interface GetSearchField{
+    public interface GetSearchField {
         void searchVis(LinearLayout linearLayout);
     }
 }

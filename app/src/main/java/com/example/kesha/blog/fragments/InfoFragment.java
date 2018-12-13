@@ -54,7 +54,6 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
-            Log.e("ASD", "newState = " + newState);
         }
 
         @Override
@@ -150,7 +149,6 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     }
 
 
-
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -185,8 +183,10 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                     }
                 }
             });
-            postsTextView.setText(getActivity().getString(R.string.text_info_posts_count, blog.getPostCount()));
-            followersTextView.setText(getActivity().getString(R.string.text_info_followers_count, followers));
+            if (getActivity() != null) {
+                postsTextView.setText(getActivity().getString(R.string.text_info_posts_count, blog.getPostCount()));
+                followersTextView.setText(getActivity().getString(R.string.text_info_followers_count, followers));
+            }
             relativeLayout.setVisibility(View.VISIBLE);
             progressBar.setIndeterminate(false);
             progressBar.setVisibility(View.GONE);
@@ -242,7 +242,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.e(TAG, "unlike()");
                 String likes = likeCount.getText().toString();
                 likeCount.setText(String.valueOf(Long.valueOf(likes) - 1));
-                Toast.makeText(getActivity(), "unlike", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.text_toast_unlike), Toast.LENGTH_SHORT).show();
             } else {
                 new Thread() {
                     @Override
@@ -259,7 +259,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 Log.e(TAG, "like()");
                 String likes = likeCount.getText().toString();
                 likeCount.setText(String.valueOf(Long.valueOf(likes) + 1));
-                Toast.makeText(getActivity(), "like", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), getString(R.string.text_toast_like), Toast.LENGTH_SHORT).show();
             }
         }
 
@@ -273,7 +273,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             , posts.get(position).getId(), posts.get(position).getReblogKey());
                 }
             }).start();
-            Toast.makeText(getActivity(), "reblog", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.text_toast_reblog), Toast.LENGTH_SHORT).show();
         }
     };
 

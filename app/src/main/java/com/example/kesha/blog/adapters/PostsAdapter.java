@@ -7,6 +7,7 @@ import android.media.MediaPlayer;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
@@ -26,6 +28,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
+import com.example.kesha.blog.MyWebView;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.utils.SearchClickListener;
@@ -45,6 +48,8 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 
 public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostViewHolder> {
+    private final String TAG = PostsAdapter.class.getSimpleName();
+
     private LayoutInflater inflater;
     private List<Post> posts;
     private Activity activity;
@@ -130,6 +135,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         return height;
     }
 
+
     @SuppressLint("ResourceAsColor")
     @Override
     public void onBindViewHolder(@NonNull PhotoPostViewHolder viewHolder, int i) {
@@ -184,6 +190,9 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     String[] body = textPost.getBody().split("img src=\"");
                     String[] body2 = body[1].split("\" data-orig-height");
                     String imageUrl = body2[0];
+                    LinearLayout.LayoutParams gridRootParams = new LinearLayout
+                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getPostHeight(position));
+                    viewHolder.gridRoot.setLayoutParams(gridRootParams);
                     setImageLikedPost(imageUrl, viewHolder);
                 }
                 if (textPost.getTitle() != null) {
@@ -360,42 +369,43 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 viewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 break;
             case AUDIO:
-                viewHolder.progressBarLickedPost.setVisibility(View.GONE);
-                viewHolder.gridRoot.setVisibility(View.VISIBLE);
-                AudioPost audioPost = (AudioPost) posts.get(position);
-                final String URL = audioPost.getAudioUrl();
-                RelativeLayout relativeLayout = (RelativeLayout) inflater.inflate(R.layout.player, viewHolder.gridRoot, false);
-                final Button playButton = relativeLayout.findViewById(R.id.btn_play);
-                Button stopButton = relativeLayout.findViewById(R.id.btn_stop);
-                playButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        MediaPlayer player = new MediaPlayer();
-                        try {
-                            player.setDataSource(URL);
-                            player.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-                                @Override
-                                public void onPrepared(MediaPlayer mp) {
-                                    mp.start();
-                                }
-                            });
-                            player.prepareAsync();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                AudioPost audioPost = (AudioPost) posts.get(viewHolder.getAdapterPosition());
+                String textAudioPost = audioPost.getCaption();
+                if (textAudioPost != null) {
+                    String textBodyVideoPost = android.text.Html.fromHtml(textAudioPost).toString();
+                    if (textBodyVideoPost.length() != 0) {
+                        while (textBodyVideoPost.charAt(textBodyVideoPost.length() - 1) == '\n') {
+                            textBodyVideoPost = textBodyVideoPost.substring(0, textBodyVideoPost.length() - 1);
                         }
                     }
-                });
-                stopButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
 
+                    viewHolder.bodyText.setText(textBodyVideoPost);
+                    viewHolder.bodyText.setVisibility(VISIBLE);
+                    if (viewHolder.bodyText.getLineCount() > 15) {
+                        viewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
-                });
 
-                viewHolder.gridRoot.addView(relativeLayout);
+                }
+                if (audioPost.getTags() != null) {
+                    for (int j = 0; j < audioPost.getTags().size(); j++) {
+                        viewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), audioPost.getTags().get(j)));
+                    }
+                    viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                }
+                FrameLayout linearLayout = new FrameLayout(activity);
+                LinearLayout.LayoutParams layoutParams = new LinearLayout
+                        .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 6800);
+                MyWebView myWebView = new MyWebView(activity);
+                WebViewClient webViewClient = new WebViewClient();
+                myWebView.setWebViewClient(webViewClient);
+                viewHolder.gridRoot.addView(myWebView, layoutParams);
+                myWebView.load(audioPost.getAudioUrl());
+
+
                 viewHolder.progressBarLickedPost.setIndeterminate(false);
                 viewHolder.progressBarLickedPost.setVisibility(GONE);
                 viewHolder.lickedPostLinear.setVisibility(VISIBLE);
+                Log.e(TAG, "music");
                 break;
         }
     }

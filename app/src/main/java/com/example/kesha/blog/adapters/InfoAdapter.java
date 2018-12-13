@@ -415,6 +415,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 infoViewHolder.progressBarLickedPost.setVisibility(GONE);
                 infoViewHolder.lickedPostLinear.setVisibility(VISIBLE);
                 Log.e(TAG, "music");
+                break;
         }
 
     }

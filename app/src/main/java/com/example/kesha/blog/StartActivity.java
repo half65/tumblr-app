@@ -28,7 +28,6 @@ public class StartActivity extends AppCompatActivity {
     private static final String TAG = StartActivity.class.getSimpleName();
     private Button startAuthBtn;
     private static final int REQUEST_CODE_AUTH = 33;
-    private ConstraintLayout constraintLayout;
     private TextView textNotInternet;
     private OAuth10aService oAuthService;
     public OAuth1RequestToken requestToken;
@@ -37,7 +36,6 @@ public class StartActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.start_activity);
-        constraintLayout = findViewById(R.id.start_activity_constrain);
         textNotInternet = findViewById(R.id.text_no_internet_text_view);
         textNotInternet.setVisibility(View.GONE);
         startAuthBtn = findViewById(R.id.registration_btn);

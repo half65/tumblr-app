@@ -35,7 +35,7 @@ import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
 
-public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
+public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     private RecyclerView recyclerView;
     private EditText fieldSearch;
@@ -144,31 +144,32 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
         }
 
         @Override
-        public void onClickLike(final int position,final List<Post> posts, ImageView imageView, Boolean isLike, TextView likeCount) {
-            if(isLike){
+        public void onClickLike(final int position, final List<Post> posts, ImageView imageView, Boolean isLike, TextView likeCount) {
+            if (isLike) {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).unlike();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
                     }
                 }.start();
                 imageView.setImageResource(R.drawable.ic_unlike_24dp);
                 Log.e(TAG, "unlike()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)-1));
-                Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
-            }else {
+                likeCount.setText(String.valueOf(Long.valueOf(likes) - 1));
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_unlike), Toast.LENGTH_SHORT).show();
+            } else {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).like();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
 
                     }
@@ -176,13 +177,14 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
                 imageView.setImageResource(R.drawable.ic_like_24dp);
                 Log.e(TAG, "like()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)+1));
-                Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                likeCount.setText(String.valueOf(Long.valueOf(likes) + 1));
+                if (getActivity() != null)
+                    Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_like), Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onClickReblog(final int position,final List<Post> posts) {
+        public void onClickReblog(final int position, final List<Post> posts) {
             final JumblrClient client = TumblrApplication.getClient();
             new Thread(new Runnable() {
                 @Override
@@ -191,21 +193,22 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
                             , posts.get(position).getId(), posts.get(position).getReblogKey());
                 }
             }).start();
-            Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
+            if (getActivity() != null)
+                Toast.makeText(getActivity(), getActivity().getText(R.string.text_toast_reblog), Toast.LENGTH_SHORT).show();
         }
     };
 
     @Override
     public void onRefresh() {
-        if(recyclerView.getAdapter()!=null){
+        if (recyclerView.getAdapter() != null) {
             if (!TextUtils.isEmpty(fieldSearch.getText())) {
                 progressBarSearch.setVisibility(View.VISIBLE);
                 progressBarSearch.setIndeterminate(true);
                 getResponseSearch(fieldSearch.getText().toString());
-            }else {
+            } else {
                 mSwipeRefresh.setRefreshing(false);
             }
-        }else {
+        } else {
             mSwipeRefresh.setRefreshing(false);
         }
     }

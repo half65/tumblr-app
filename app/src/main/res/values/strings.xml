@@ -28,5 +28,11 @@
     <string name="text_error_load_data">loading error:</string>
     <string name="error_text_no_posts">В этом блоге еще нет постов.</string>
     <string name="no_results">The query gave no results</string>
+    <string name="help_text_posts">нажмите на текст чтобы свернуть(развернуть)</string>
+    <string name="hint_text_field_search_tag">введите тэг для поиска</string>
+    <string name="hint_field_search_blog_posts">введите название блога</string>
+    <string name="text_toast_unlike">unlike</string>
+    <string name="text_toast_like">like</string>
+    <string name="text_toast_reblog">reblog</string>
 
 </resources>

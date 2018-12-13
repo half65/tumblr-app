@@ -7,13 +7,14 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
 import com.example.kesha.blog.fragments.FollowersFragment;
 import com.example.kesha.blog.fragments.FollowingFragment;
-import com.example.kesha.blog.fragments.FragmentSearch;
+import com.example.kesha.blog.fragments.SearchFragment;
 import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.PostsFragment;
 import com.example.kesha.blog.utils.PreferencesStorage;
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         adapter.addFragment(new InfoFragment(), getString(R.string.title_info_blog));
         adapter.addFragment(new FollowingFragment(), getString(R.string.title_subscriptions));
         adapter.addFragment(new FollowersFragment(), getString(R.string.title_subscribers));
-        adapter.addFragment(new FragmentSearch(), getString(R.string.title_search_by_tags));
+        adapter.addFragment(new SearchFragment(), getString(R.string.title_search_by_tags));
         viewPager.setAdapter(adapter);
     }
 
@@ -158,9 +159,14 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void run() {
                         if(postsFragment != null){
-                            postsFragment.isDashboard = false;
-                            tabLayout.getTabAt(0).select();
-                            postsFragment.setSearchResult(posts,blogName);
+                            try{
+                                postsFragment.isDashboard = false;
+                                tabLayout.getTabAt(0).select();
+                                postsFragment.setSearchResult(posts,blogName);
+                            }catch (NullPointerException e){
+                                Log.e(TAG,e.toString());
+                            }
+
                         }
                     }
                 });

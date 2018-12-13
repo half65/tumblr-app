@@ -23,24 +23,25 @@
                 android:orientation="horizontal">
 
                 <EditText
-                    android:id="@+id/editText2"
+                    android:id="@+id/field_enter_blog_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="4"
                     android:backgroundTint="@android:color/transparent"
                     android:ems="10"
-                    android:hint="введите название блога"
-                    android:inputType="textPersonName" />
+                    android:hint="@string/hint_field_search_blog_posts"
+                    android:inputType="textPersonName"
+                    tools:ignore="Autofill,UnusedAttribute" />
 
                 <ImageButton
-                    android:id="@+id/button"
+                    android:id="@+id/start_search_blogs_btn"
                     style="@android:style/Widget.DeviceDefault.Light.ImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="45dp"
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/ic_search_black_24dp"
-                    tools:ignore="NewApi" />
+                    tools:ignore="ContentDescription,NewApi" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

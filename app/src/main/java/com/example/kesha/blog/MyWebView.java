@@ -33,6 +33,7 @@ public class MyWebView extends WebView {
         }
 
 
+        @SuppressLint("SetJavaScriptEnabled")
         private void initDefaultSetting() {
             WebSettings webSettings = this.getSettings();
             webSettings.setJavaScriptEnabled(true);

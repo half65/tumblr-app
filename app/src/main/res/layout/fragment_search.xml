@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/containerSearch"
-    tools:context=".fragments.FragmentSearch">
+    tools:context=".fragments.SearchFragment">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
@@ -25,7 +25,9 @@
                 android:layout_weight="4"
                 android:backgroundTint="@android:color/transparent"
                 android:ems="10"
-                android:hint="введите тэг для поиска" />
+                android:hint="@string/hint_text_field_search_tag"
+                tools:targetApi="lollipop"
+                tools:ignore="Autofill,TextFields" />
 
             <ImageButton
                 android:id="@+id/start_search_batton"
@@ -35,7 +37,7 @@
                 android:layout_gravity="center"
                 android:layout_weight="1"
                 android:background="@drawable/ic_search_black_24dp"
-                tools:ignore="NewApi" />
+                tools:ignore="ContentDescription,NewApi" />
         </LinearLayout>
 
         <android.support.v7.widget.RecyclerView
