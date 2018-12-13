@@ -67,19 +67,24 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     public InfoAdapter(Activity activity, List<Post> posts, OnInfoAdapterClickListener listener) {
         this.posts = posts;
         this.activity = activity;
-        inflater = activity.getLayoutInflater();
+        if (activity != null)
+            inflater = activity.getLayoutInflater();
         onImageClickListener = listener;
 
         Point size = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        if (activity != null)
+            activity.getWindowManager().getDefaultDisplay().getSize(size);
         screenWidth = size.x;
     }
 
     @NonNull
     @Override
     public InfoViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = inflater.inflate(R.layout.item_info_recycler, viewGroup, false);
-        return new InfoViewHolder(view);
+        if(inflater!=null){
+            View view = inflater.inflate(R.layout.item_info_recycler, viewGroup, false);
+            return new InfoViewHolder(view);
+        }else return null;
+
     }
 
     private String getLikePostImg(PhotoPost photoPost, int iteration) {
@@ -91,31 +96,31 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
     }
 
 
-    private int getPostHeight(int position){
-        PhotoPost photoPost = (PhotoPost)posts.get(position);
+    private int getPostHeight(int position) {
+        PhotoPost photoPost = (PhotoPost) posts.get(position);
         int total = ((PhotoPost) posts.get(position)).getPhotos().size();
         int columns = 2;
         int rows = total / columns;
         int imagePosition = 0;
         int height = 0;
 
-        if (total /columns > 0) {
-            height+=6*rows;
+        if (total / columns > 0) {
+            height += 6 * rows;
             float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    *((screenWidth-8)/2);
+                    / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    * ((screenWidth - 8) / 2);
             int rowHeight = 0;
-            rowHeight = rows*(int) imageHeight;
+            rowHeight = rows * (int) imageHeight;
             height += rowHeight;
             if ((total % columns) == 1) {
-                height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                        /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                        *(screenWidth+100);
+                height += (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                        / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                        * (screenWidth + 100);
             }
         } else {
-            height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    *(screenWidth+100);
+            height += (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    * (screenWidth + 100);
         }
 
 
@@ -139,7 +144,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         infoViewHolder.blogName.setText(null);
         infoViewHolder.gridRoot.removeAllViews();
         infoViewHolder.gridRoot.setLayoutParams(new LinearLayout
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
         if (posts.get(infoViewHolder.getAdapterPosition()).isLiked()) {
             infoViewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
@@ -165,9 +170,8 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 .into(infoViewHolder.blogAvatar);
         infoViewHolder.blogName.setText(blogName);
         String countLike = String.valueOf((int) likes);
-        if (countLike != null) {
-            infoViewHolder.likes.setText(countLike);
-        }
+        infoViewHolder.likes.setText(countLike);
+
 
         @SuppressLint("SimpleDateFormat")
         String newFormatDate = new SimpleDateFormat(activity.getString(R.string.textFormatUpdateLikedPost))
@@ -205,7 +209,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 }
                 if (textPost.getTags().size() != 0) {
                     for (int j = 0; j < textPost.getTags().size(); j++) {
-                        infoViewHolder.tagText.append(String.format("#%s ", textPost.getTags().get(j)));
+                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), textPost.getTags().get(j)));
                     }
 
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
@@ -243,7 +247,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 }
                 if (ps.getTags().size() != 0) {
                     for (int j = 0; j < ps.getTags().size(); j++) {
-                        infoViewHolder.tagText.append(String.format("#%s ", ps.getTags().get(j)));
+                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), ps.getTags().get(j)));
                     }
 
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
@@ -259,7 +263,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if (total /columns > 0) {
+                if (total / columns > 0) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -320,7 +324,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 }
                 if (videoPost.getTags() != null) {
                     for (int j = 0; j < videoPost.getTags().size(); j++) {
-                        infoViewHolder.tagText.append(String.format("#%s ", videoPost.getTags().get(j)));
+                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), videoPost.getTags().get(j)));
                     }
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                     infoViewHolder.textPostLinear.setVisibility(VISIBLE);
@@ -385,7 +389,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 }
                 if (audioPost.getTags() != null) {
                     for (int j = 0; j < audioPost.getTags().size(); j++) {
-                        infoViewHolder.tagText.append(String.format("#%s ", audioPost.getTags().get(j)));
+                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), audioPost.getTags().get(j)));
                     }
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                 }
@@ -448,7 +452,6 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         private LinearLayout tagRootLinearLayout;
         private LinearLayout lickedPostLinear;
         private LinearLayout textPostLinear;
-        private FrameLayout videoFrameLayout;
         private boolean isLike;
         private Animation likeZoomAnim;
 

@@ -56,7 +56,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
 
         void onBodyTextClick(TextView textView);
 
-        void onClickLike(int position, List<Post> posts, ImageView imageView, Boolean isLike,TextView likeCount);
+        void onClickLike(int position, List<Post> posts, ImageView imageView, Boolean isLike, TextView likeCount);
 
         void onClickReblog(int position, List<Post> posts);
 
@@ -69,11 +69,13 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
     public PostsAdapter(Activity activity, List<Post> posts, OnPostAdapterClickListener onPostAdapterClickListener) {
         this.posts = posts;
         this.activity = activity;
-        inflater = activity.getLayoutInflater();
+        if (activity != null)
+            inflater = activity.getLayoutInflater();
         this.onPostAdapterClickListener = onPostAdapterClickListener;
 
         Point size = new Point();
-        activity.getWindowManager().getDefaultDisplay().getSize(size);
+        if (activity != null)
+            activity.getWindowManager().getDefaultDisplay().getSize(size);
         screenWidth = size.x;
     }
 
@@ -97,39 +99,43 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
     @NonNull
     @Override
     public PhotoPostViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-        View view = inflater.inflate(R.layout.item_post_fragment_recycler, viewGroup, false);
-        return new PhotoPostViewHolder(view);
+        if (inflater != null) {
+            View view = inflater.inflate(R.layout.item_post_fragment_recycler, viewGroup, false);
+            return new PhotoPostViewHolder(view);
+        } else return null;
+
+
     }
 
     private String getLikeVideo(VideoPost videoPost) {
         return videoPost.getThumbnailUrl();
     }
 
-    private int getPostHeight(int position){
-        PhotoPost photoPost = (PhotoPost)posts.get(position);
+    private int getPostHeight(int position) {
+        PhotoPost photoPost = (PhotoPost) posts.get(position);
         int total = ((PhotoPost) posts.get(position)).getPhotos().size();
         int columns = 2;
         int rows = total / columns;
         int imagePosition = 0;
         int height = 0;
 
-        if (total /columns > 0) {
-            height+=6*rows;
+        if (total / columns > 0) {
+            height += 6 * rows;
             float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    *((screenWidth-8)/2);
+                    / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    * ((screenWidth - 8) / 2);
             int rowHeight = 0;
-            rowHeight = rows*(int) imageHeight;
+            rowHeight = rows * (int) imageHeight;
             height += rowHeight;
             if ((total % columns) == 1) {
-                height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                        /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                        *(screenWidth+100);
+                height += (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                        / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                        * (screenWidth + 100);
             }
         } else {
-            height+= (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
-                    /((float)photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    *(screenWidth+100);
+            height += (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
+                    / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
+                    * (screenWidth + 100);
         }
 
 
@@ -150,7 +156,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         viewHolder.blogName.setText(null);
         viewHolder.gridRoot.removeAllViews();
         viewHolder.gridRoot.setLayoutParams(new LinearLayout
-                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,ViewGroup.LayoutParams.WRAP_CONTENT));
+                .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
         if (posts.get(viewHolder.getAdapterPosition()).isLiked()) {
             viewHolder.likeBtn.setImageResource(R.drawable.ic_like_24dp);
             viewHolder.isLike = true;
@@ -158,7 +164,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             viewHolder.likeBtn.setImageResource(R.drawable.ic_unlike_24dp);
             viewHolder.isLike = false;
         }
-        if(posts.get(viewHolder.getAdapterPosition()).getBlogName().equals(Utils.myBlogName)){
+        if (posts.get(viewHolder.getAdapterPosition()).getBlogName().equals(Utils.myBlogName)) {
             viewHolder.likeBtn.setVisibility(GONE);
             viewHolder.reblogBtn.setVisibility(GONE);
         }
@@ -208,13 +214,25 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                         viewHolder.hintTextBody.setVisibility(VISIBLE);
                     }
                 }
+                if (textPost.getTags().size() != 0) {
+                    for (int j = 0; j < textPost.getTags().size(); j++) {
+                        viewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format)
+                                , textPost.getTags().get(j)));
+                    }
+
+                    viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
+                    viewHolder.textPostLinear.setVisibility(VISIBLE);
+                }
+                viewHolder.progressBarLickedPost.setIndeterminate(false);
+                viewHolder.progressBarLickedPost.setVisibility(GONE);
+                viewHolder.lickedPostLinear.setVisibility(VISIBLE);
 
                 break;
 
             case PHOTO:
 
-                PhotoPost ps = (PhotoPost) posts.get(position);
-                String textPhotoPost = ps.getCaption();
+                PhotoPost photoPost = (PhotoPost) posts.get(position);
+                String textPhotoPost = photoPost.getCaption();
                 if (textPhotoPost != null) {
                     String textBodyPhotoPost = Html.fromHtml(textPhotoPost).toString();
                     if (textBodyPhotoPost.length() != 0) {
@@ -230,9 +248,10 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     }
 
                 }
-                if (ps.getTags() != null) {
-                    for (int j = 0; j < ps.getTags().size(); j++) {
-                        viewHolder.tagText.append(String.format("#%s ", ps.getTags().get(j)));
+                if (photoPost.getTags() != null) {
+                    for (int j = 0; j < photoPost.getTags().size(); j++) {
+                        viewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format)
+                                , photoPost.getTags().get(j)));
                     }
 
                     viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
@@ -247,7 +266,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 int rows = total / columns;
                 int imagePosition = 0;
 
-                if (total /columns > 0) {
+                if (total / columns > 0) {
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
@@ -308,7 +327,8 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                 }
                 if (videoPost.getTags() != null) {
                     for (int j = 0; j < videoPost.getTags().size(); j++) {
-                        viewHolder.tagText.append(String.format("#%s ", videoPost.getTags().get(j)));
+                        viewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format)
+                                , videoPost.getTags().get(j)));
                     }
                     viewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                 }
@@ -472,7 +492,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     switch (event.getAction()) {
                         case MotionEvent.ACTION_DOWN:
                             likeBtn.startAnimation(likeZoomAnim);
-                            onPostAdapterClickListener.onClickLike(getAdapterPosition(), posts, likeBtn, isLike,likeCount);
+                            onPostAdapterClickListener.onClickLike(getAdapterPosition(), posts, likeBtn, isLike, likeCount);
                             isLike = !isLike;
                             break;
                         case MotionEvent.ACTION_UP:

@@ -11,5 +11,6 @@
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
         android:layout_gravity="center"
-        tools:srcCompat="@tools:sample/avatars[7]" />
+        tools:srcCompat="@tools:sample/avatars[7]"
+        tools:ignore="ContentDescription" />
 </FrameLayout>

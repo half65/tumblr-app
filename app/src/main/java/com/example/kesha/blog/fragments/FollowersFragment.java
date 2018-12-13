@@ -66,7 +66,7 @@ public class FollowersFragment extends Fragment implements SwipeRefreshLayout.On
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            FollowersAdapter followersAdapter = new FollowersAdapter(getActivity(), users, client);
+                            FollowersAdapter followersAdapter = new FollowersAdapter(getActivity(), users);
                             recyclerView.setAdapter(followersAdapter);
                             progressBar.setVisibility(View.GONE);
                             recyclerView.setVisibility(View.VISIBLE);
@@ -84,7 +84,7 @@ public class FollowersFragment extends Fragment implements SwipeRefreshLayout.On
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getString(R.string.text_error_load_data) + reason, Toast.LENGTH_LONG).show();
                             mSwipeRefresh.setRefreshing(false);
                         }
                     });

@@ -1,6 +1,7 @@
 package com.example.kesha.blog.fragments;
 
 import android.animation.Animator;
+import android.animation.ValueAnimator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -25,6 +26,7 @@ import com.bumptech.glide.load.resource.bitmap.RoundedCorners;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.adapters.InfoAdapter;
+import com.example.kesha.blog.utils.Constants;
 import com.example.kesha.blog.utils.GlideApp;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
@@ -38,7 +40,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private final String TAG = InfoFragment.class.getSimpleName();
     private RecyclerView informationRecycler;
     private ImageView avatarImageView;
-    private RelativeLayout relativeLayout;
+    private View relativeLayout;
     private ProgressBar progressBar;
     private TextView nameTextView;
     private TextView postsTextView;
@@ -47,7 +49,8 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private SwipeRefreshLayout mSwipeRefresh;
     private RelativeLayout topElement;
     private boolean isDown = true;
-    private boolean vid = true;
+    private boolean isViewUp = true;
+    private boolean isViewDown = true;
     private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
         @Override
         public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
@@ -56,25 +59,69 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
 
         @Override
         public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
-            Log.e("ASD", "dx = " + dx + " dy = " + dy);
-            if (dy > 0 && isDown) {
-                topElement.animate().translationY(-550);
-                isDown = false;
-                vid = false;
-                if (vid = false){
-                    topElement.setVisibility(View.GONE);
+            if (dy > 50) {
+                if (!isDown) {
+                    isDown = true;
+                    if (isViewUp) {
+                        animateHeader(true);
+                    }
+                } else {
+                    isDown = false;
                 }
-            }
-            if (dy < 0 && !isDown) {
-                topElement.animate().translationY(Math.abs(0));
-                isDown = true;
-                vid = true;
-                if (vid = true ){
-                    topElement.setVisibility(View.VISIBLE);
+            } else if (dy < -50) {
+                if (isDown) {
+                    isDown = false;
+                    if (isViewDown) {
+                        animateHeader(false);
+                    }
+                } else {
+                    isDown = true;
                 }
             }
         }
     };
+
+
+    private void animateHeader(final boolean isDown) {
+        ValueAnimator widthAnimator = ValueAnimator.ofInt(0, 550);
+        widthAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                int value = (int) animation.getAnimatedValue();
+                RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topElement.getLayoutParams();
+                params.topMargin = isDown ? -value : (-550 + value);
+                topElement.setLayoutParams(params);
+                animation.addListener(new Animator.AnimatorListener() {
+
+                    @Override
+                    public void onAnimationEnd(Animator animation) {
+                        if (isDown) {
+                            isViewUp = false;
+                            isViewDown = true;
+                        } else {
+                            isViewUp = true;
+                            isViewDown = false;
+                        }
+
+                    }
+
+                    @Override
+                    public void onAnimationStart(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationCancel(Animator animation) {
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animator animation) {
+                    }
+                });
+            }
+        });
+        widthAnimator.setDuration(500);
+        widthAnimator.start();
+    }
 
 
     @Nullable
@@ -87,7 +134,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         relativeLayout = fragmentView.findViewById(R.id.info_relative_layout);
         informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
-        informationRecycler.setOnScrollListener(scrollListener);
+        informationRecycler.addOnScrollListener(scrollListener);
         relativeLayout.setVisibility(View.GONE);
         progressBar = fragmentView.findViewById(R.id.progressBar_info_fragment);
         progressBar.setVisibility(View.VISIBLE);
@@ -99,7 +146,6 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         followingTextView = fragmentView.findViewById(R.id.followingTextView);
         LinearLayoutManager manager = new LinearLayoutManager(inflater.getContext(), LinearLayoutManager.VERTICAL, false);
         informationRecycler.setLayoutManager(manager);
-
         return fragmentView;
     }
 
@@ -144,9 +190,9 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         public void onImageClick(String imageURL) {
             ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("imageUrl", imageURL);
+            bundle.putString(Constants.KEY_IMAGE_URL, imageURL);
             imageDialogFragment.setArguments(bundle);
-            if(getActivity()!=null) {
+            if (getActivity() != null) {
                 imageDialogFragment.show(getActivity().getSupportFragmentManager(), ImageDialogFragment.class.getSimpleName());
             }
         }
@@ -154,9 +200,9 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         @Override
         public void onBodyTextClick(TextView textView) {
             int maxLines = textView.getMaxLines();
-            if(maxLines==15){
+            if (maxLines == 15) {
                 textView.setMaxLines(2000);
-            }else {
+            } else {
                 textView.setMaxLines(15);
             }
         }
@@ -167,32 +213,32 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         }
 
         @Override
-        public void onClickLike(final int position,final List<Post> posts, ImageView imageView, Boolean isLike,TextView likeCount) {
+        public void onClickLike(final int position, final List<Post> posts, ImageView imageView, Boolean isLike, TextView likeCount) {
 
-            if(isLike){
+            if (isLike) {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).unlike();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
                     }
                 }.start();
                 imageView.setImageResource(R.drawable.ic_unlike_24dp);
                 Log.e(TAG, "unlike()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)-1));
-                Toast.makeText(getActivity(),"unlike",Toast.LENGTH_SHORT).show();
-            }else {
+                likeCount.setText(String.valueOf(Long.valueOf(likes) - 1));
+                Toast.makeText(getActivity(), "unlike", Toast.LENGTH_SHORT).show();
+            } else {
                 new Thread() {
                     @Override
                     public void run() {
                         try {
                             posts.get(position).like();
-                        }catch (Exception e){
-                            Log.e(TAG,e.toString());
+                        } catch (Exception e) {
+                            Log.e(TAG, e.toString());
                         }
 
                     }
@@ -200,13 +246,13 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                 imageView.setImageResource(R.drawable.ic_like_24dp);
                 Log.e(TAG, "like()");
                 String likes = likeCount.getText().toString();
-                likeCount.setText(String.valueOf(Long.valueOf(likes)+1));
-                Toast.makeText(getActivity(),"like",Toast.LENGTH_SHORT).show();
+                likeCount.setText(String.valueOf(Long.valueOf(likes) + 1));
+                Toast.makeText(getActivity(), "like", Toast.LENGTH_SHORT).show();
             }
         }
 
         @Override
-        public void onClickReblog(final int position,final List<Post> posts) {
+        public void onClickReblog(final int position, final List<Post> posts) {
             final JumblrClient client = TumblrApplication.getClient();
             new Thread(new Runnable() {
                 @Override
@@ -215,7 +261,7 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
                             , posts.get(position).getId(), posts.get(position).getReblogKey());
                 }
             }).start();
-            Toast.makeText(getActivity(),"reblog",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), "reblog", Toast.LENGTH_SHORT).show();
         }
     };
 

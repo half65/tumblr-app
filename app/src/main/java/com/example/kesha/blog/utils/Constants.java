@@ -6,5 +6,6 @@ public class Constants {
     public static final String consumerKey = "yuWfjh1UkS8UgAZWmjOPHQMmoJOXUXilND42nZTYYstohhxKsE";
     public static final String consumerSecret = "X3B5Pm1xuqqerpLdqXFeozYJZNVnkvNAzK43UmkXHHMerHBlt8";
     public static String logOutURL = "https://www.tumblr.com/logout";
+    public static final String KEY_IMAGE_URL = "KEY_IMAGE_URL";
 
 }

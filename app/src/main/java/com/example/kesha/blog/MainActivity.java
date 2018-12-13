@@ -5,23 +5,19 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.example.kesha.blog.utils.PreferencesStorage;
-import com.example.kesha.blog.utils.Utils;
 import com.example.kesha.blog.fragments.FollowersFragment;
 import com.example.kesha.blog.fragments.FollowingFragment;
 import com.example.kesha.blog.fragments.FragmentSearch;
 import com.example.kesha.blog.fragments.InfoFragment;
 import com.example.kesha.blog.fragments.PostsFragment;
+import com.example.kesha.blog.utils.PreferencesStorage;
+import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Post;
 
@@ -30,11 +26,9 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
-    private AlertDialog.Builder ad;
-    private ViewPagerAdapter adapter;
     private TabLayout tabLayout;
-    PostsFragment postsFragment;
-    Button button;
+    private PostsFragment postsFragment;
+
 
 
 
@@ -43,12 +37,12 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.update:
-                String title = "Смена профиля";
-                String message = "Вы уверены что хотите выйти из профиля?";
-                ad = new AlertDialog.Builder(this);
+                String title = getString(R.string.title_logout_dialog);
+                String message = getString(R.string.message_logout_dialog);
+                AlertDialog.Builder ad = new AlertDialog.Builder(this);
                 ad.setTitle(title);
                 ad.setMessage(message);
-                ad.setPositiveButton("Да",
+                ad.setPositiveButton(R.string.text_positive_btn_logout_dialog,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
@@ -57,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                                 finish();
                             }
                         });
-                ad.setNegativeButton("Нет",
+                ad.setNegativeButton(R.string.text_negative_btn_logout_dialog,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 dialog.dismiss();
@@ -124,14 +118,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setupViewPager(ViewPager viewPager) {
-        adapter = new ViewPagerAdapter(getSupportFragmentManager());
+        ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
 
         postsFragment = new PostsFragment();
-        adapter.addFragment(postsFragment, "posts");
-        adapter.addFragment(new InfoFragment(), "info");
-        adapter.addFragment(new FollowingFragment(), "following");
-        adapter.addFragment(new FollowersFragment(), "followers");
-        adapter.addFragment(new FragmentSearch(), "search");
+        adapter.addFragment(postsFragment, getString(R.string.title_post));
+        adapter.addFragment(new InfoFragment(), getString(R.string.title_info_blog));
+        adapter.addFragment(new FollowingFragment(), getString(R.string.title_subscriptions));
+        adapter.addFragment(new FollowersFragment(), getString(R.string.title_subscribers));
+        adapter.addFragment(new FragmentSearch(), getString(R.string.title_search_by_tags));
         viewPager.setAdapter(adapter);
     }
 

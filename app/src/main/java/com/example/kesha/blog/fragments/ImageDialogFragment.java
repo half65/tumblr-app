@@ -15,6 +15,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.target.SimpleTarget;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.kesha.blog.R;
+import com.example.kesha.blog.utils.Constants;
 import com.example.kesha.blog.utils.GlideApp;
 
 public class ImageDialogFragment extends DialogFragment {
@@ -25,7 +26,7 @@ public class ImageDialogFragment extends DialogFragment {
         View v = inflater.inflate(R.layout.picture_zoom_fragment, container, false);
         imageView = v.findViewById(R.id.zoom_image);
         Bundle arg = getArguments();
-        if (arg != null) imageURL = arg.getString("imageUrl");
+        if (arg != null) imageURL = arg.getString(Constants.KEY_IMAGE_URL);
         if (getActivity() != null) {
             GlideApp.with(getActivity())
                     .load(imageURL)
@@ -47,6 +48,7 @@ public class ImageDialogFragment extends DialogFragment {
         if (dialog != null) {
             int width = ViewGroup.LayoutParams.MATCH_PARENT;
             int height = ViewGroup.LayoutParams.WRAP_CONTENT;
+            if(dialog.getWindow()!=null)
             dialog.getWindow().setLayout(width, height);
         }
     }

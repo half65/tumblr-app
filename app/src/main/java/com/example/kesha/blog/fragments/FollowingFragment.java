@@ -67,7 +67,7 @@ public class FollowingFragment extends Fragment implements SwipeRefreshLayout.On
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs, client);
+                            FollowingAdapter followingAdapter = new FollowingAdapter(getActivity(), blogs);
                             recyclerView.setAdapter(followingAdapter);
                             recyclerView.setVisibility(View.VISIBLE);
                             progressBar.setIndeterminate(false);
@@ -83,7 +83,7 @@ public class FollowingFragment extends Fragment implements SwipeRefreshLayout.On
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            Toast.makeText(getActivity(), "loading error: " + reason, Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), getActivity().getString(R.string.text_error_load_data) + reason, Toast.LENGTH_LONG).show();
                             mSwipeRefresh.setRefreshing(false);
                         }
                     });

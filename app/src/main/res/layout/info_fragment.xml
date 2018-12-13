@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -12,92 +13,99 @@
 
         <RelativeLayout
             android:id="@+id/info_relative_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:ignore="UselessParent">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
 
             <RelativeLayout
                 android:id="@+id/upper_insert"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="166dp">
 
-            <ImageView
-                android:id="@+id/avatarImageView"
-                android:layout_width="@dimen/icon_size_avatar_user_info"
-                android:layout_height="@dimen/icon_size_avatar_user_info"
-                android:layout_alignParentStart="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginVertical="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginLeft="8dp"
-                android:contentDescription="@string/me_avatar"
-                tools:ignore="RtlHardcoded,UnusedAttribute"
-                tools:src="@tools:sample/avatars" />
+                <ImageView
+                    android:id="@+id/avatarImageView"
+                    android:layout_width="@dimen/icon_size_avatar_user_info"
+                    android:layout_height="@dimen/icon_size_avatar_user_info"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginVertical="8dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:contentDescription="@string/me_avatar"
+                    tools:ignore="RtlHardcoded,UnusedAttribute"
+                    tools:src="@tools:sample/avatars" />
 
 
-            <TextView
-                android:id="@+id/nameTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="15dp"
-                android:layout_toEndOf="@+id/avatarImageView"
-                android:layout_toRightOf="@+id/avatarImageView"
-                android:gravity="center"
-                android:textSize="@dimen/font_size_username"
-                android:textStyle="bold"
-                tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="15dp"
+                    android:layout_toEndOf="@+id/avatarImageView"
+                    android:layout_toRightOf="@+id/avatarImageView"
+                    android:gravity="center"
+                    android:textSize="@dimen/font_size_username"
+                    android:textStyle="bold"
+                    tools:ignore="RtlHardcoded" />
 
-            <TextView
-                android:id="@+id/postsTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/nameTextView"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_toRightOf="@+id/avatarImageView"
-                android:gravity="center"
-                tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/postsTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/nameTextView"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toRightOf="@+id/avatarImageView"
+                    android:gravity="center"
+                    tools:ignore="RtlHardcoded" />
 
-            <TextView
-                android:id="@+id/followersTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/postsTextView"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_toEndOf="@+id/avatarImageView"
-                android:layout_toRightOf="@+id/avatarImageView"
-                android:gravity="center"
-                tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/followersTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/postsTextView"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toEndOf="@+id/avatarImageView"
+                    android:layout_toRightOf="@+id/avatarImageView"
+                    android:gravity="center"
+                    tools:ignore="RtlHardcoded" />
 
-            <TextView
-                android:id="@+id/followingTextView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/followersTextView"
-                android:layout_marginStart="40dp"
-                android:layout_marginLeft="40dp"
-                android:layout_marginTop="20dp"
-                android:layout_toEndOf="@+id/avatarImageView"
-                android:layout_toRightOf="@+id/avatarImageView"
-                android:gravity="center"
-                tools:ignore="RtlHardcoded" />
+                <TextView
+                    android:id="@+id/followingTextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/followersTextView"
+                    android:layout_marginStart="40dp"
+                    android:layout_marginLeft="40dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_toEndOf="@+id/avatarImageView"
+                    android:layout_toRightOf="@+id/avatarImageView"
+                    android:gravity="center"
+                    tools:ignore="RtlHardcoded" />
 
             </RelativeLayout>
-
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/informationRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
                 android:layout_below="@+id/upper_insert"
-                android:layout_marginTop="20dp"
+                android:layout_marginBottom="8dp"
                 android:background="@color/colorTextHintStartActivity"
-                android:paddingTop="2dp" />
+                android:paddingTop="2dp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/upper_insert" />
 
         </RelativeLayout>
 

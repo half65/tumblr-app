@@ -28,13 +28,11 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
     private List<Blog> blogs;
     private LayoutInflater layoutInflater;
     private Activity activity;
-    private JumblrClient client;
     private int corner;
 
-    public FollowingAdapter(Activity activity, List<Blog> blogs, JumblrClient client) {
+    public FollowingAdapter(Activity activity, List<Blog> blogs) {
         this.activity = activity;
         this.blogs = blogs;
-        this.client = client;
         layoutInflater = LayoutInflater.from(activity);
         corner = activity.getResources().getDimensionPixelSize(R.dimen.icon_size_middle) / 2;
     }
@@ -84,7 +82,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
         private TextView dateUpdated;
         private ImageView avatarFollowing;
 
-        public FollowingViewHolder(View view) {
+        FollowingViewHolder(View view) {
             super(view);
             dateUpdated = view.findViewById(R.id.date_update_text_view);
             nameFollowingTextView = view.findViewById(R.id.name_following_text_view);

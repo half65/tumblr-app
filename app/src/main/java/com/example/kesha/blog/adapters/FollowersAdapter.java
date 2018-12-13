@@ -24,12 +24,10 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
     private List<User> followers;
     private LayoutInflater layoutInflater;
     private Activity activity;
-    private JumblrClient client;
     private int corner;
 
-    public FollowersAdapter(Activity act, List<User> users, JumblrClient client) {
+    public FollowersAdapter(Activity act, List<User> users) {
         followers = users;
-        this.client = client;
         layoutInflater = LayoutInflater.from(act);
         activity = act;
         corner = activity.getResources().getDimensionPixelSize(R.dimen.icon_size_middle) / 2;
@@ -39,9 +37,8 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
     @NonNull
     @Override
     public FollowersViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        if(activity!=null){
         View view = layoutInflater.inflate(R.layout.item_followers, viewGroup, false);
-        return new FollowersViewHolder(view);}return null;
+        return new FollowersViewHolder(view);
     }
 
     @Override
@@ -68,7 +65,7 @@ public class FollowersAdapter extends RecyclerView.Adapter<FollowersAdapter.Foll
         private ImageView avatarFollower;
 
 
-        public FollowersViewHolder(View view) {
+        FollowersViewHolder(View view) {
             super(view);
             nameFollowerTextView = view.findViewById(R.id.name_followers_text_view);
             nameFollowerTextView.setOnClickListener(new SearchClickListener(activity));///////////////////////////////////////

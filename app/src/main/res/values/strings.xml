@@ -1,16 +1,16 @@
 <resources>
     <string name="app_name">BloG</string>
-    <string name="title_post">post</string>
+    <string name="title_post">posts</string>
     <string name="title_info_blog">info</string>
     <string name="title_subscriptions">following</string>
     <string name="title_subscribers">followers</string>
     <string name="title_search_by_tags">search</string>
-    <string name="textErrorOpenWebView">The application could not open the window for authorization. Try restarting the application.</string>
+    <string name="textErrorOpenWebView">Произошел сбой и приложение не смогло открыть окно для авторизации. Попробуйте перезапустить приложение. Если проблема не исчезла обратитесь в поддержку plastilin.kesha@yandex.ru</string>
     <string name="text_registration_btn">Зарегистрироваться (войти)</string>
     <string name="text_info_posts_count">Постов: %1$d</string>
     <string name="text_info_followers_count">Подписчиков: %d</string>
     <string name="text_info_following_count">Mои подписки: %d</string>
-    <string name="me_avatar">Me avatar</string>
+    <string name="me_avatar">My avatar</string>
     <string name="alert_dialog_title">Сохранить данные входа?</string>
     <string name="avatar_follower_descr">avatar follower</string>
     <string name="updateString">Последнее обновление %s</string>
@@ -19,6 +19,12 @@
     <string name="blog_avatar">blog_avatar</string>
     <string name="textFormatUpdateLikedPost">Опубликованно dd MMM в HH:mm</string>
     <string name="textErrNoInternet">Доступ к сети интернет отсутствует. Проверьте подключение или обратитесь к своему оператору, который предоставляет доступ.</string>
-    <string name="log_aut">Log aut</string>
+    <string name="log_aut">Log out</string>
+    <string name="title_logout_dialog">Смена профиля</string>
+    <string name="message_logout_dialog">Вы уверены что хотите выйти из профиля?</string>
+    <string name="text_positive_btn_logout_dialog">Да</string>
+    <string name="text_negative_btn_logout_dialog">Нет</string>
+    <string name="tag_stting_format">#%s</string>
+    <string name="text_error_load_data">loading error:</string>
 
 </resources>

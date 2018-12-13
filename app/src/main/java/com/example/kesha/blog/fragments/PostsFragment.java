@@ -26,6 +26,7 @@ import com.example.kesha.blog.MainActivity;
 import com.example.kesha.blog.R;
 import com.example.kesha.blog.TumblrApplication;
 import com.example.kesha.blog.adapters.PostsAdapter;
+import com.example.kesha.blog.utils.Constants;
 import com.example.kesha.blog.utils.Utils;
 import com.tumblr.jumblr.JumblrClient;
 import com.tumblr.jumblr.types.Post;
@@ -40,8 +41,6 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
     private ProgressBar postFragmentProgressBar;
     private SwipeRefreshLayout mSwipeRefresh;
     public boolean isDashboard = true;
-    GetSearchField getSearchField;
-    LinearLayout linearLayout;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
@@ -142,7 +141,7 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onImageClick(String imageURL) {
             ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
             Bundle bundle = new Bundle();
-            bundle.putString("imageUrl", imageURL);
+            bundle.putString(Constants.KEY_IMAGE_URL, imageURL);
             imageDialogFragment.setArguments(bundle);
             if (getActivity() != null) {
                 imageDialogFragment.show(getActivity().getSupportFragmentManager(), ImageDialogFragment.class.getSimpleName());
