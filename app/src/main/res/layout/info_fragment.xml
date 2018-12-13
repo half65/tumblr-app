@@ -10,23 +10,16 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <!--<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"-->
-            <!--android:id="@+id/scroll"-->
-            <!--android:scrollbars="none"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content">-->
-
-        <!--<HorizontalScrollView-->
-            <!--android:id="@+id/hscroll"-->
-            <!--android:scrollbars="none"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="fill_parent">-->
-
         <RelativeLayout
             android:id="@+id/info_relative_layout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:ignore="UselessParent">
+
+            <RelativeLayout
+                android:id="@+id/upper_insert"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
             <ImageView
                 android:id="@+id/avatarImageView"
@@ -94,12 +87,14 @@
                 android:gravity="center"
                 tools:ignore="RtlHardcoded" />
 
+            </RelativeLayout>
+
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/informationRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/avatarImageView"
+                android:layout_below="@+id/upper_insert"
                 android:layout_marginTop="20dp"
                 android:background="@color/colorTextHintStartActivity"
                 android:paddingTop="2dp" />

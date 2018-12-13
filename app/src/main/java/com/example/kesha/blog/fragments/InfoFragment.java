@@ -1,5 +1,6 @@
 package com.example.kesha.blog.fragments;
 
+import android.animation.Animator;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -44,17 +45,49 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     private TextView followersTextView;
     private TextView followingTextView;
     private SwipeRefreshLayout mSwipeRefresh;
+    private RelativeLayout topElement;
+    private boolean isDown = true;
+    private boolean vid = true;
+    private RecyclerView.OnScrollListener scrollListener = new RecyclerView.OnScrollListener() {
+        @Override
+        public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+            Log.e("ASD", "newState = " + newState);
+        }
+
+        @Override
+        public void onScrolled(@NonNull RecyclerView recyclerView, int dx, int dy) {
+            Log.e("ASD", "dx = " + dx + " dy = " + dy);
+            if (dy > 0 && isDown) {
+                topElement.animate().translationY(-550);
+                isDown = false;
+                vid = false;
+                if (vid = false){
+                    topElement.setVisibility(View.GONE);
+                }
+            }
+            if (dy < 0 && !isDown) {
+                topElement.animate().translationY(Math.abs(0));
+                isDown = true;
+                vid = true;
+                if (vid = true ){
+                    topElement.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    };
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View fragmentView = inflater.inflate(R.layout.info_fragment, container, false);
+        topElement = fragmentView.findViewById(R.id.upper_insert);
         mSwipeRefresh = fragmentView.findViewById(R.id.containerInfo);
         mSwipeRefresh.setOnRefreshListener(this);
         mSwipeRefresh.setColorSchemeResources(R.color.light_blue, R.color.middle_blue, R.color.deep_blue);
         relativeLayout = fragmentView.findViewById(R.id.info_relative_layout);
         informationRecycler = fragmentView.findViewById(R.id.informationRecycler);
+        informationRecycler.setOnScrollListener(scrollListener);
         relativeLayout.setVisibility(View.GONE);
         progressBar = fragmentView.findViewById(R.id.progressBar_info_fragment);
         progressBar.setVisibility(View.VISIBLE);
@@ -222,4 +255,5 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     public void onRefresh() {
         getInfo();
     }
+
 }
