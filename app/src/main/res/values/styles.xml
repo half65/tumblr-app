@@ -18,4 +18,7 @@
         <item name="colorControlHighlight">#673ab7</item>
     </style>
 
+    <style name="infoViewStyle" parent="">
+</style>
+
 </resources>

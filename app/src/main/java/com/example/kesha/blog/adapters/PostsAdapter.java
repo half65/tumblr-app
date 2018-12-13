@@ -79,18 +79,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
         screenWidth = size.x;
     }
 
-    public void setPosts(List<Post> posts) {
-        this.posts = posts;
-        if (activity != null) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    notifyDataSetChanged();
-                }
-            });
-        }
-    }
-
     private static String getLikePostImg(final PhotoPost photoPost, final int iteration) {
         String imageUrl = photoPost.getPhotos().get(iteration).getSizes().get(1).getUrl();
         return imageUrl;
@@ -123,7 +111,7 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
             height += 6 * rows;
             float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
                     / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    * ((screenWidth - 8) / 2);
+                    * ((screenWidth-8) / 2);
             int rowHeight = 0;
             rowHeight = rows * (int) imageHeight;
             height += rowHeight;

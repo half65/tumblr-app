@@ -40,7 +40,7 @@
                     android:layout_gravity="center"
                     android:layout_weight="1"
                     android:background="@drawable/ic_search_black_24dp"
-                    tools:ignore="NewApi"/>
+                    tools:ignore="NewApi" />
             </LinearLayout>
 
             <android.support.v7.widget.RecyclerView

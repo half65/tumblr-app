@@ -90,10 +90,9 @@
                 android:id="@+id/grid_root_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
                 android:layout_marginTop="4dp"
-                android:layout_marginRight="10dp"
                 android:layout_marginBottom="4dp"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
             </LinearLayout>
@@ -173,7 +172,7 @@
                     android:layout_width="@dimen/icon_size_hint_like_count"
                     android:layout_height="@dimen/icon_size_hint_like_count"
                     android:layout_gravity="bottom"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="4dp"
                     android:layout_marginBottom="4dp"
                     android:alpha="0.3"
                     android:background="@drawable/ic_hint_like_post_count"
@@ -184,7 +183,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="bottom|left"
-                    android:layout_marginStart="28dp"
+                    android:layout_marginStart="22dp"
                     android:layout_marginBottom="2dp"
                     android:alpha="0.4"
                     tools:ignore="RtlHardcoded" />
@@ -194,7 +193,7 @@
                     android:layout_width="@dimen/icon_size_image_like"
                     android:layout_height="@dimen/icon_size_image_like"
                     android:layout_gravity="bottom|right"
-                    android:layout_marginEnd="15dp"
+                    android:layout_marginEnd="8dp"
                     android:background="@null"
                     android:scaleType="fitXY"
                     tools:ignore="ContentDescription,RtlHardcoded" />
@@ -204,7 +203,7 @@
                     android:layout_width="@dimen/icon_size_reblog"
                     android:layout_height="@dimen/icon_size_reblog"
                     android:layout_gravity="bottom|right"
-                    android:layout_marginEnd="50dp"
+                    android:layout_marginEnd="45dp"
                     android:background="@null"
                     android:scaleType="fitXY"
                     tools:ignore="ContentDescription,RtlHardcoded" />

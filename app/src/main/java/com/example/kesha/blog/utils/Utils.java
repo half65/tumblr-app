@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.example.kesha.blog.TumblrApplication;
 import com.tumblr.jumblr.JumblrClient;
@@ -137,12 +138,22 @@ public class Utils {
             @Override
             public void run() {
                 JumblrClient client = TumblrApplication.getClient();
+                final List<Post> postResult;
                 try {
-                    final List<Post> posts = client.blogPosts(blogName);
-                    callback.onPostLoaded(posts,client);
+                    Blog blog = client.blogInfo(blogName);
+                    callback.onPostLoaded(blog.posts(),client);
+
                 } catch (Exception e) {
-                    Log.println(Log.ASSERT, TAG, "loadFollowingInfo exception: " + e.toString());
-                    callback.onLoadFailed(e.toString());
+
+                    try {
+                        Blog blogCom = client.blogInfo(String.format("%s.tumblr.com",blogName));
+                        callback.onPostLoaded(blogCom.posts(),client);
+
+                    }catch (Exception d){
+                        Log.println(Log.ASSERT, TAG, "loadPosts exception: " + e.toString());
+                        callback.onLoadFailed(e.toString());
+                    }
+
                 }
             }
         }).start();

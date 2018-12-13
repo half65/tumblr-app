@@ -136,11 +136,20 @@ public class MainActivity extends AppCompatActivity {
         super.onDestroy();
 
     }
-    public void search(String data) {
-        Utils.loadBlogPosts(data, new Utils.JumblrPostCallback() {
+
+
+    public void search(final String blogName) {
+        Utils.loadBlogPosts(blogName, new Utils.JumblrPostCallback() {
 
             @Override
             public void onLoadFailed(final String reason) {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        Toast.makeText(MainActivity.this,reason,Toast.LENGTH_LONG).show();
+                    }
+                });
+
             }
 
             @Override
@@ -151,7 +160,7 @@ public class MainActivity extends AppCompatActivity {
                         if(postsFragment != null){
                             postsFragment.isDashboard = false;
                             tabLayout.getTabAt(0).select();
-                            postsFragment.setSearchResult(posts);
+                            postsFragment.setSearchResult(posts,blogName);
                         }
                     }
                 });

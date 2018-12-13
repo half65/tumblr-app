@@ -26,6 +26,7 @@
     <string name="text_negative_btn_logout_dialog">Нет</string>
     <string name="tag_stting_format">#%s</string>
     <string name="text_error_load_data">loading error:</string>
+    <string name="error_text_no_posts">В этом блоге еще нет постов.</string>
     <string name="no_results">The query gave no results</string>
 
 </resources>

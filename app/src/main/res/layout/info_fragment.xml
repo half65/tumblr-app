@@ -21,7 +21,9 @@
             <RelativeLayout
                 android:id="@+id/upper_insert"
                 android:layout_width="match_parent"
-                android:layout_height="166dp">
+                android:layout_height="166dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true">
 
                 <ImageView
                     android:id="@+id/avatarImageView"
@@ -41,14 +43,15 @@
                     android:id="@+id/nameTextView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="15dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="8dp"
                     android:layout_toEndOf="@+id/avatarImageView"
                     android:layout_toRightOf="@+id/avatarImageView"
                     android:gravity="center"
                     android:textSize="@dimen/font_size_username"
                     android:textStyle="bold"
+                    android:textColor="@color/dark"
                     tools:ignore="RtlHardcoded" />
 
                 <TextView
@@ -56,9 +59,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/nameTextView"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="4dp"
                     android:layout_toRightOf="@+id/avatarImageView"
                     android:gravity="center"
                     tools:ignore="RtlHardcoded" />
@@ -68,9 +71,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/postsTextView"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="3dp"
                     android:layout_toEndOf="@+id/avatarImageView"
                     android:layout_toRightOf="@+id/avatarImageView"
                     android:gravity="center"
@@ -81,30 +84,36 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/followersTextView"
-                    android:layout_marginStart="40dp"
-                    android:layout_marginLeft="40dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginTop="3dp"
                     android:layout_toEndOf="@+id/avatarImageView"
                     android:layout_toRightOf="@+id/avatarImageView"
                     android:gravity="center"
                     tools:ignore="RtlHardcoded" />
 
+
+                <View
+                    android:layout_width="fill_parent"
+                    android:layout_height="3dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginStart="0dp"
+                    android:layout_marginTop="163dp"
+                    android:layout_marginBottom="0dp"
+                    android:background="@color/colorPrimary" />
             </RelativeLayout>
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/informationRecycler"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginEnd="8dp"
                 android:layout_below="@+id/upper_insert"
-                android:layout_marginBottom="8dp"
-                android:background="@color/colorTextHintStartActivity"
-                android:paddingTop="2dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="0dp"
+                android:layout_marginEnd="0dp"
                 app:layout_constraintTop_toBottomOf="@+id/upper_insert" />
 
         </RelativeLayout>

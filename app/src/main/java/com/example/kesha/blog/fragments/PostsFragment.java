@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -116,24 +117,32 @@ public class PostsFragment extends Fragment implements SwipeRefreshLayout.OnRefr
         public void onClick(View v) {
             if (getActivity() != null) {
                 MainActivity activity = (MainActivity) getActivity();
+                if(!TextUtils.isEmpty(fieldEnterBlogName.getText().toString()))
                 activity.search(fieldEnterBlogName.getText().toString());
             }
         }
     };
 
-    public void setSearchResult(List<Post> posts){
+    public void setSearchResult(List<Post> posts, String blogName){
+
+        if(posts.size()==0){
+            Toast.makeText(getActivity(),getString(R.string.error_text_no_posts),Toast.LENGTH_LONG).show();
+            fieldEnterBlogName.setText(blogName);
+            postFragmentProgressBar.setVisibility(View.GONE);
+            postFragmentProgressBar.setIndeterminate(false);
+            return;
+        }
         postFragmentProgressBar.setVisibility(View.VISIBLE);
         postFragmentProgressBar.setIndeterminate(true);
         if (getActivity() != null) {
-            String blogName = posts.get(0).getBlogName();
             fieldEnterBlogName.setText(blogName);
             PostsAdapter postsAdapter = new PostsAdapter(getActivity(), posts, onPostClickListener);
             recyclerView.setAdapter(postsAdapter);
-            postFragmentProgressBar.setVisibility(View.GONE);
-            postFragmentProgressBar.setIndeterminate(false);
-            recyclerView.setVisibility(View.VISIBLE);
-            mSwipeRefresh.setRefreshing(false);
         }
+        postFragmentProgressBar.setVisibility(View.GONE);
+        postFragmentProgressBar.setIndeterminate(false);
+        recyclerView.setVisibility(View.VISIBLE);
+        mSwipeRefresh.setRefreshing(false);
     }
 
     private final PostsAdapter.OnPostAdapterClickListener onPostClickListener = new PostsAdapter.OnPostAdapterClickListener() {

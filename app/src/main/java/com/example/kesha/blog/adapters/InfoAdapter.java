@@ -108,7 +108,7 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
             height += 6 * rows;
             float imageHeight = (photoPost.getPhotos().get(imagePosition).getSizes().get(1).getHeight()
                     / ((float) photoPost.getPhotos().get(imagePosition).getSizes().get(1).getWidth()))
-                    * ((screenWidth - 8) / 2);
+                    * ((screenWidth-20) / 2);
             int rowHeight = 0;
             rowHeight = rows * (int) imageHeight;
             height += rowHeight;
@@ -247,9 +247,9 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                 }
                 if (ps.getTags().size() != 0) {
                     for (int j = 0; j < ps.getTags().size(); j++) {
-                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format), ps.getTags().get(j)));
+                        infoViewHolder.tagText.append(String.format(activity.getString(R.string.tag_stting_format)
+                                , ps.getTags().get(j)));
                     }
-
                     infoViewHolder.tagRootLinearLayout.setVisibility(VISIBLE);
                     infoViewHolder.textPostLinear.setVisibility(VISIBLE);
                 }
@@ -267,20 +267,28 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
                     for (int j = 0; j < rows; j++) {
                         LinearLayout rowLayout = new LinearLayout(activity);
                         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
+                        rowLayout.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT,LayoutParams.WRAP_CONTENT));
                         LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                                .LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+                                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                         rowItemParams.weight = 1;
-                        rowItemParams.setMargins(3, 2, 3, 2);
+                        rowItemParams.setMargins(0,2,0,2);
                         for (int k = 0; k < 2; k++) {
                             ImageView imageView = new ImageView(activity);
+                            if(k==0){
+                                imageView.setPadding(0,0,3,0);
+                            }else {
+                                imageView.setPadding(3,0,0,0);
+                            }
+
                             final String imageURL = getLikePostImg(((PhotoPost) posts.get(position)), imagePosition);
                             GlideApp.with(activity)
                                     .load(imageURL)
                                     .diskCacheStrategy(DiskCacheStrategy.ALL)
                                     .into(imageView);
                             imageView.setVisibility(VISIBLE);
+                            imageView.setScaleType(ImageView.ScaleType.FIT_XY);
                             rowLayout.addView(imageView, rowItemParams);
-                            imageView.setOnClickListener(new OnClickListener() {
+                            imageView.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
                                     onImageClickListener.onImageClick(imageURL);
@@ -417,15 +425,15 @@ public class InfoAdapter extends RecyclerView.Adapter<InfoAdapter.InfoViewHolder
         LinearLayout rowLayout = new LinearLayout(activity);
         rowLayout.setOrientation(LinearLayout.HORIZONTAL);
         LinearLayout.LayoutParams rowItemParams = new LinearLayout
-                .LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                .LayoutParams(LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         rowItemParams.weight = 1;
-        rowItemParams.setMargins(3, 2, 3, 10);
+        rowItemParams.setMargins(0, 2, 0, 2);
         ImageView imageView = new ImageView(activity);
         GlideApp.with(activity)
                 .load(imageUrl)
                 .diskCacheStrategy(DiskCacheStrategy.ALL)
                 .into(imageView);
-        imageView.setOnClickListener(new OnClickListener() {
+        imageView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onImageClickListener.onImageClick(imageUrl);

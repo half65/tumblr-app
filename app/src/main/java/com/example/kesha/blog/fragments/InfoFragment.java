@@ -149,6 +149,8 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         return fragmentView;
     }
 
+
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -162,17 +164,27 @@ public class InfoFragment extends Fragment implements SwipeRefreshLayout.OnRefre
             nameTextView.setText(user.getName());
             followingTextView.setText(getActivity().getString(R.string.text_info_following_count, user.getFollowingCount()));
 
-            String avatarUrl = Utils.getAvatarUrl(blog.getName(), 512);
+            final String avatarUrl = Utils.getAvatarUrl(blog.getName(), 512);
             //process blog data
             if (!TextUtils.isEmpty(avatarUrl)) {
                 GlideApp.with(getActivity())
                         .load(avatarUrl)
                         .placeholder(R.drawable.text_tumblr_com)
-                        .transform(new RoundedCorners(getActivity()
-                                .getResources()
-                                .getDimensionPixelSize(R.dimen.icon_size_avatar_user_info) / 2))
+                        .transform(new RoundedCorners(10))
                         .into(avatarImageView);
             }
+            avatarImageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    ImageDialogFragment imageDialogFragment = new ImageDialogFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putString(Constants.KEY_IMAGE_URL, avatarUrl);
+                    imageDialogFragment.setArguments(bundle);
+                    if (getActivity() != null) {
+                        imageDialogFragment.show(getActivity().getSupportFragmentManager(), ImageDialogFragment.class.getSimpleName());
+                    }
+                }
+            });
             postsTextView.setText(getActivity().getString(R.string.text_info_posts_count, blog.getPostCount()));
             followersTextView.setText(getActivity().getString(R.string.text_info_followers_count, followers));
             relativeLayout.setVisibility(View.VISIBLE);
