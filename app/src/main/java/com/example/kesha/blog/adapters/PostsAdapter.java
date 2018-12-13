@@ -190,9 +190,6 @@ public class PostsAdapter extends RecyclerView.Adapter<PostsAdapter.PhotoPostVie
                     String[] body = textPost.getBody().split("img src=\"");
                     String[] body2 = body[1].split("\" data-orig-height");
                     String imageUrl = body2[0];
-                    LinearLayout.LayoutParams gridRootParams = new LinearLayout
-                            .LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, getPostHeight(position));
-                    viewHolder.gridRoot.setLayoutParams(gridRootParams);
                     setImageLikedPost(imageUrl, viewHolder);
                 }
                 if (textPost.getTitle() != null) {
