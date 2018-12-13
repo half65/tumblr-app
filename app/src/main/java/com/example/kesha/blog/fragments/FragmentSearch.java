@@ -11,6 +11,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,6 +84,15 @@ public class FragmentSearch extends Fragment implements SwipeRefreshLayout.OnRef
                 @Override
                 public void run() {
                     if (getActivity() != null && isAdded()) {
+                        if (posts.size() == 0 && getActivity() != null) {
+                            Toast toast = Toast.makeText(getActivity(),
+                                    R.string.no_results, Toast.LENGTH_SHORT);
+                            toast.setGravity(Gravity.CENTER, 0, 0);
+                            toast.show();
+                            progressBarSearch.setVisibility(View.GONE);
+                            recyclerView.setVisibility(View.VISIBLE);
+                            mSwipeRefresh.setRefreshing(false);
+                        }
                         if (posts.size() != 0 && getActivity() != null) {
                             InfoAdapter infoAdapter = new InfoAdapter(getActivity(), posts, onSearchClickListener);
                             recyclerView.setAdapter(infoAdapter);
