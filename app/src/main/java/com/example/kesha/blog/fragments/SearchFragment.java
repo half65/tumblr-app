@@ -34,6 +34,7 @@ import com.tumblr.jumblr.types.Post;
 import java.util.List;
 
 import static android.support.constraint.Constraints.TAG;
+import static android.view.View.resolveSizeAndState;
 
 public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
@@ -73,6 +74,7 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
                 progressBarSearch.setVisibility(View.VISIBLE);
                 progressBarSearch.setIndeterminate(true);
                 getResponseSearch(fieldSearch.getText().toString());
+
             }
 
         }
@@ -111,6 +113,19 @@ public class SearchFragment extends Fragment implements SwipeRefreshLayout.OnRef
             @Override
             public void onPostsLoaded(List<Post> posts) {
                 makeAdapter(posts);
+            }
+
+            @Override
+            public void onLoadFailed(final String reason) {
+                if (getActivity() != null)
+                    getActivity().runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Toast.makeText(getActivity(), reason, Toast.LENGTH_LONG).show();
+                            progressBarSearch.setVisibility(View.GONE);
+                            progressBarSearch.setIndeterminate(false);
+                        }
+                    });
             }
         });
     }

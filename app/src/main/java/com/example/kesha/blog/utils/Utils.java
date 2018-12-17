@@ -33,6 +33,7 @@ public class Utils {
 
     public interface TaggedPostsCallback {
         void onPostsLoaded(List<Post> posts);
+        void onLoadFailed(String reason);
     }
 
 
@@ -76,8 +77,14 @@ public class Utils {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                List<Post> posts = client.tagged(tag);
-                callback.onPostsLoaded(posts);
+                try{
+                    List<Post> posts = client.tagged(tag);
+                    callback.onPostsLoaded(posts);
+                }catch (Exception e){
+                    Log.println(Log.ASSERT, TAG, "loadPost exception: " + e.toString());
+                    callback.onLoadFailed(e.toString());
+                }
+
             }
         }).start();
     }

@@ -33,6 +33,7 @@ public class FollowingAdapter extends RecyclerView.Adapter<FollowingAdapter.Foll
     public FollowingAdapter(Activity activity, List<Blog> blogs) {
         this.activity = activity;
         this.blogs = blogs;
+        if(activity!=null)
         layoutInflater = LayoutInflater.from(activity);
         corner = activity.getResources().getDimensionPixelSize(R.dimen.icon_size_middle) / 2;
     }
